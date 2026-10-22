@@ -53,3 +53,7 @@ F2-02 convierte cada unidad del timeline en una altura de viewport dentro de `Sc
 ## D-012 — Ancho completo y saltos del recorrido (2026-10-22)
 
 El stage ocupa todo el ancho del viewport; se eliminó el padding del `body` y se conservó el espaciado propio del encabezado y del contenido posterior. Los cinco botones de parada calculan su destino desde `stopStart` y la distancia real de ScrollTrigger, y Lenis salta a esa posición de forma inmediata. Al cambiar de tramo se oculta el video previo hasta que el nuevo frame esté listo, mostrando el fondo de reserva. El panel de datos de scroll, fase, tiempo y visual se renderiza solo con `import.meta.env.DEV`; no aparece en el build de producción. En modo de movimiento reducido se ocultan los controles de salto porque el timeline no está activo.
+
+## D-013 — Paradas visibles sobre intervalos existentes (2026-10-22)
+
+El timeline de F2-01 ya intercala `stopUnits` después de cada video, con longitud independiente por segmento. F3-01 añade cinco paneles semánticos provisionales a ese estado sin duplicar el cálculo de scroll. `world.ts` muestra el panel correspondiente a `activeStopId` solo durante la fase `stop` y publica su progreso en el stage. El video activo conserva el fotograma final durante todo el intervalo. Los paneles no asignan todavía espacios físicos ni contenido comercial: esa identificación depende de la revisión de medios y las capas de fondo se implementarán en F3-02.

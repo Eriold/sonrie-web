@@ -42,23 +42,47 @@ try {
   assert.equal(forward.phase, 'video');
   assert.ok(allVideos.every(({ phase }) => phase === 'video'));
   assert.ok(Math.abs(forward.time - backward.time) < 0.1);
+  for (const index of [0, 1, 2, 3, 4, 3, 2, 1, 0]) {
+    await page.getByRole('button', { name: `Ir a la parada ${index + 1}` }).click();
+    await page.waitForFunction((expected) => {
+      const stage = document.querySelector('[data-stage]');
+      const visibleStop = [...document.querySelectorAll('[data-stop]')].find((stop) => !stop.hidden);
+      return stage?.dataset.phase === 'stop'
+        && stage.dataset.segmentIndex === String(expected)
+        && visibleStop?.getAttribute('data-stop-id') === `parada-${expected + 1}`;
+    }, index);
+    assert.equal(await page.locator('[data-stop]:visible').count(), 1);
+  }
   await page.getByRole('button', { name: 'Ir a la parada 5' }).click();
   await page.waitForFunction(() => {
     const stage = document.querySelector('[data-stage]');
     return stage?.dataset.segmentIndex === '4' && stage.dataset.phase === 'stop';
   });
+  assert.equal(await page.locator('[data-stop]:visible').count(), 1);
+  assert.equal(await page.locator('[data-stop]:visible').getAttribute('data-stop-id'), 'parada-5');
+  assert.equal(await page.locator('[data-stage]').getAttribute('data-stop-id'), 'parada-5');
   assert.equal(await page.locator('[data-goto-stop="4"]').getAttribute('aria-current'), 'step');
   await page.getByRole('button', { name: 'Ir a la parada 2' }).click();
   await page.waitForFunction(() => {
     const stage = document.querySelector('[data-stage]');
     return stage?.dataset.segmentIndex === '1' && stage.dataset.phase === 'stop';
   });
+  assert.equal(await page.locator('[data-stop]:visible').getAttribute('data-stop-id'), 'parada-2');
+  const stopTime = await page.locator('[data-clip][data-index="1"]').evaluate((video) => video.currentTime);
+  await page.evaluate(() => {
+    const world = document.querySelector('[data-world]');
+    window.scrollTo(0, world.offsetTop + 10.8 * window.innerHeight);
+  });
+  await page.waitForFunction(() => Number(document.querySelector('[data-stage]')?.dataset.stopProgress) > 0.8);
+  assert.equal(await page.locator('[data-stop]:visible').getAttribute('data-stop-id'), 'parada-2');
+  assert.ok(Math.abs((await page.locator('[data-clip][data-index="1"]').evaluate((video) => video.currentTime)) - stopTime) < 0.1);
   await page.evaluate(() => {
     const world = document.querySelector('[data-world]');
     window.scrollTo(0, world.offsetTop + 27 * window.innerHeight);
     window.scrollTo(0, world.offsetTop + 2 * window.innerHeight);
   });
   await page.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.segmentIndex === '0');
+  assert.equal(await page.locator('[data-stop]:visible').count(), 0);
   await page.getByRole('link', { name: 'Saltar el recorrido' }).click();
   assert.equal(new URL(page.url()).hash, '#despues-del-recorrido');
   assert.deepEqual(errors, []);

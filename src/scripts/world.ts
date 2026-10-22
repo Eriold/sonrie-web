@@ -10,8 +10,9 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const counter = world.querySelector<HTMLElement>('[data-counter]');
   const debug = world.querySelector<HTMLOutputElement>('[data-debug]');
   const stopButtons = [...world.querySelectorAll<HTMLButtonElement>('[data-goto-stop]')];
+  const stops = [...world.querySelectorAll<HTMLElement>('[data-stop]')];
   const videos = [...world.querySelectorAll<HTMLVideoElement>('[data-clip]')];
-  if (!stage || !status || !counter || videos.length !== timeline.segments.length) return;
+  if (!stage || !status || !counter || videos.length !== timeline.segments.length || stops.length !== timeline.segments.length) return;
 
   if (staticMode) {
     world.dataset.motion = 'off';
@@ -95,17 +96,23 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       if (index === activeIndex) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');
     });
+    stops.forEach((stop, index) => {
+      stop.hidden = state.phase !== 'stop' || index !== activeIndex;
+    });
     stage.dataset.phase = state.phase;
     stage.dataset.segmentIndex = String(activeIndex);
     stage.dataset.videoProgress = state.videoProgress.toFixed(4);
     stage.dataset.videoTime = state.videoTimeSeconds.toFixed(3);
+    stage.dataset.stopProgress = state.stopProgress.toFixed(4);
+    if (state.activeStopId) stage.dataset.stopId = state.activeStopId;
+    else delete stage.dataset.stopId;
     if (!failed.has(activeIndex)) {
       status.textContent = state.phase === 'stop'
         ? `Parada ${activeIndex + 1} de ${videos.length}. Contenido en preparación.`
         : `Tramo ${activeIndex + 1} de ${videos.length}. Desplázate para avanzar o retroceder.`;
     }
     stage.dataset.visual = shownIndex === activeIndex ? 'video' : 'fallback';
-    if (debug) debug.textContent = `Tramo ${activeIndex + 1}/${videos.length} · ${state.phase} · scroll ${(progress * 100).toFixed(1)}% · video ${state.videoTimeSeconds.toFixed(2)} s · ${stage.dataset.visual}`;
+    if (debug) debug.textContent = `Tramo ${activeIndex + 1}/${videos.length} · ${state.phase} ${(state.stopProgress * 100).toFixed(0)}% · scroll ${(progress * 100).toFixed(1)}% · video ${state.videoTimeSeconds.toFixed(2)} s · ${stage.dataset.visual}`;
   };
 
   const trigger = ScrollTrigger.create({

@@ -24,6 +24,19 @@ const isDev = import.meta.env.DEV;
       />
     ))}
     <div class="shade" aria-hidden="true"></div>
+    {timeline.segments.map((segment, index) => (
+      <section
+        class="stop"
+        data-stop
+        data-stop-id={segment.stopId}
+        aria-labelledby={`stop-title-${index + 1}`}
+        hidden
+      >
+        <p class="stop-eyebrow">Parada del recorrido</p>
+        <h3 id={`stop-title-${index + 1}`}>Parada {index + 1}</h3>
+        <p>Contenido en preparación.</p>
+      </section>
+    ))}
     <div class="copy">
       <p class="eyebrow">Recorrido en preparación · {timeline.segments.length} tramos</p>
       <h2>Conoce Sonríe</h2>
@@ -55,6 +68,11 @@ const isDev = import.meta.env.DEV;
   .clip { object-fit: cover; opacity: 0; transition: opacity 180ms ease; }
   .clip.is-active { opacity: 1; }
   .shade { pointer-events: none; background: linear-gradient(90deg, rgb(7 30 34 / 77%), transparent 80%), linear-gradient(0deg, rgb(7 30 34 / 65%), transparent 45%); }
+  .stop { position: absolute; z-index: 2; top: clamp(5rem, 12vh, 8rem); left: clamp(1.5rem, 6vw, 6rem); max-width: min(26rem, calc(100% - 6rem)); padding: 1.25rem 1.5rem; border: 1px solid rgb(255 255 255 / 50%); border-radius: 1rem; background: rgb(7 30 34 / 82%); box-shadow: 0 1rem 2rem rgb(0 0 0 / 15%); }
+  .stop[hidden] { display: none; }
+  .stop-eyebrow { margin: 0 0 .5rem; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
+  .stop h3 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 4vw, 2.25rem); }
+  .stop p:last-child { margin: 0; }
   .copy { position: absolute; z-index: 2; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); max-width: 34rem; }
   .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: .75rem; }
   h2 { margin: .6rem 0; font-size: clamp(2.75rem, 7vw, 6rem); line-height: 1; }

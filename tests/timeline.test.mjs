@@ -53,6 +53,22 @@ test('limita posiciones fuera de rango y mantiene el resultado al retroceder o s
   assert.deepEqual(resolveTourPosition(timeline, 2), firstVisit);
 });
 
+test('cada intervalo de parada mantiene su duración configurable y se recupera al volver', () => {
+  const configured = tourSegments.map((segment, index) => ({ ...segment, stopUnits: index + 1 }));
+  const timeline = createTourTimeline(configured);
+  assert.equal(timeline.segments.length, 5);
+  for (const [index, segment] of timeline.segments.entries()) {
+    assert.equal(segment.end - segment.stopStart, index + 1);
+    const midpoint = segment.stopStart + (index + 1) / 2;
+    const firstVisit = resolveTourPosition(timeline, midpoint);
+    assert.equal(firstVisit.phase, 'stop');
+    assert.equal(firstVisit.stopProgress, 0.5);
+    assert.equal(firstVisit.activeStopId, `parada-${index + 1}`);
+    resolveTourPosition(timeline, timeline.totalUnits);
+    assert.deepEqual(resolveTourPosition(timeline, midpoint), firstVisit);
+  }
+});
+
 test('rechaza configuración vacía, duplicada o con longitudes inválidas', () => {
   assert.throws(() => createTourTimeline([]), /segmento/i);
   assert.throws(() => createTourTimeline([sample[0], sample[0]]), /duplicado/i);

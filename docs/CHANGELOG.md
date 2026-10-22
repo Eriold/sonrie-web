@@ -53,3 +53,10 @@
 - Se añadieron saltos a las cinco paradas, estado accesible de parada actual y panel de depuración exclusivo de desarrollo.
 - Los cambios rápidos de tramo vuelven al fondo de reserva mientras se prepara el nuevo video.
 - Chrome local verificó saltos, scroll rápido, regreso, ancho completo, movimiento reducido y ausencia de errores de página.
+
+## 2026-10-22 — F3-01, intervalos de parada
+
+- Se registró el commit local de la fase 2 como `1476aab`, sin push.
+- Se añadieron cinco paneles provisionales que aparecen en los intervalos de parada configurados y se ocultan durante cada video.
+- Se expuso el ID y progreso de la parada en el stage y el panel de depuración.
+- Pruebas verificaron longitudes configurables, ida y vuelta por las cinco paradas y fotograma estable durante una parada.
