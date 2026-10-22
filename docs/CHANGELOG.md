@@ -22,3 +22,11 @@
 - Se añadió `README.md`, `.gitattributes` y exclusiones de archivos temporales de Windows/macOS.
 - Se actualizó la guía permanente con el alcance de permisos indicado por el usuario.
 - No se creó remoto, commit ni push.
+
+## 2026-10-22 — F1-06, licencia y metadatos de video
+
+- Se constató el commit inicial y `origin` configurados por el usuario; no se hicieron commits ni pushes en esta tarea.
+- Se fijó el almacén de pnpm dentro del proyecto y se instaló `@ffprobe-installer/ffprobe` como dependencia de desarrollo.
+- Se añadió `pnpm media:inspect` para examinar los cinco MP4 sin modificarlos.
+- Se registró la ausencia de licencia escrita identificable en Arko y la aclaración posterior del usuario sobre el permiso verbal de Midudev para usar su implementación; no se trasladarán identidad ni medios de Arko.
+- Se documentaron AV1, cuatro pistas AAC, keyframes escasos, color BT.709 y `faststart`.

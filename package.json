@@ -11,7 +11,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "media:inspect": "node scripts/inspect-videos.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.0.0",
@@ -25,6 +26,7 @@
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.0",
+    "@ffprobe-installer/ffprobe": "^2.1.2",
     "typescript": "^5.0.0"
   }
 }

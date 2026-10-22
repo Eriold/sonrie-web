@@ -16,6 +16,7 @@ pnpm install --frozen-lockfile
 pnpm dev
 pnpm check
 pnpm build
+pnpm media:inspect
 ```
 
 En PowerShell de este equipo, usa `pnpm.cmd` en lugar de `pnpm` para evitar el bloqueo de `pnpm.ps1` por la política de scripts. Ambos invocan pnpm. En CMD se puede usar `pnpm`.

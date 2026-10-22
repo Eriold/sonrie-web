@@ -12,7 +12,17 @@ Inspección local: 2026-10-22. Rutas actuales relativas a la raíz: `assets/`. T
 | `Parte_4.mp4` | 1.547.984 | 1920×1080 | 24 | 141 | 5,875 s | Pendiente |
 | `Parte_5.mp4` | 2.553.891 | 1920×1080 | 24 | 181 | 7,542 s | Pendiente |
 
-La especificación los describe como videos sin audio. Aún falta comprobar pista de audio, códec, GOP, keyframes, colores y disposición `faststart` con `ffprobe` o herramienta equivalente. Las duraciones provienen de fotogramas/FPS y son aproximadas.
+La tabla anterior conserva la inspección inicial con OpenCV. F1-06 añadió `ffprobe` mediante `@ffprobe-installer/ffprobe` como dependencia de desarrollo; los resultados se pueden repetir con `pnpm media:inspect` (en PowerShell, `pnpm.cmd media:inspect`). Las cinco duraciones calculadas inicialmente coinciden con las duraciones del contenedor dentro del redondeo mostrado.
+
+| Archivo | Video / perfil | Keyframes (índices de frame, base 0) | Audio | Color | `moov` antes de `mdat` |
+| --- | --- | --- | --- | --- | --- |
+| `Parte_1.mp4` | AV1 Main, yuv420p | 0 | Sin pista | BT.709, rango TV | Sí |
+| `Parte_2.mp4` | AV1 Main, yuv420p | 0, 161, 322 | AAC estéreo, 48 kHz | BT.709, rango TV | Sí |
+| `Parte_3.mp4` | AV1 Main, yuv420p | 0 | AAC estéreo, 48 kHz | BT.709, rango TV | Sí |
+| `Parte_4.mp4` | AV1 Main, yuv420p | 0 | AAC estéreo, 48 kHz | BT.709, rango TV | Sí |
+| `Parte_5.mp4` | AV1 Main, yuv420p | 0, 161 | AAC estéreo, 48 kHz | BT.709, rango TV | Sí |
+
+Todos son 1920×1080 a 24 FPS. `color_space`, `color_transfer` y `color_primaries` son `bt709` en los cinco. Los clips 2 y 5 tienen 161 frames entre keyframes (aprox. 6,71 s); los clips 1, 3 y 4 solo tienen keyframe al inicio. Esto puede hacer costoso el seek repetido del recorrido, pero aún no se ha probado en navegador ni se ha recodificado. `moov` precede a `mdat` en todos, señal de disposición `faststart` del contenedor. Las pistas AAC de 2 a 5 contradicen la descripción de “sin audio” en `start.txt`; su presencia está confirmada, pero aún no se ha comprobado si contienen sonido perceptible. El reproductor del recorrido deberá silenciarlas y no asumir ausencia de pista.
 
 ## Fotos candidatas para paradas
 
@@ -45,7 +55,8 @@ Estos son los nombres completos reales. La asignación a roles, identidad y espa
 
 - [ ] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad.
 - [ ] Determinar si la parada final requiere foto, último fotograma congelado o póster generado.
-- [ ] Confirmar audio, códec, GOP/keyframes, color, seek y `faststart`; recodificar solo si la prueba de scrubbing lo exige.
+- [x] Confirmar presencia de pistas, códec, keyframes, color y `faststart` con `ffprobe`.
+- [ ] Probar seek y scrubbing en navegadores; confirmar si las pistas AAC tienen contenido audible; recodificar solo si las pruebas lo exigen.
 - [ ] Inspeccionar transparencia efectiva y contenido de cada PNG, y asignar rol sin atribuir nombre ni credenciales.
 - [ ] Definir pósters a partir de videos, estrategia de carga y rutas publicadas; conservar `assets/`.
 - [ ] Registrar logo, imagen social y datos del negocio cuando se reciban.
