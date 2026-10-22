@@ -1,6 +1,6 @@
 # Sonríe Urrao
 
-Landing estática en preparación para Sonríe Urrao. Actualmente existe la base técnica; el recorrido, los contenidos comerciales y la revisión de los medios siguen pendientes. La página provisional lleva `noindex`.
+Landing estática en preparación para Sonríe Urrao. El recorrido provisional muestra cinco videos a ancho completo, controlados por scroll, con saltos a sus paradas. Los fondos de las paradas, los contenidos comerciales y la revisión final de los medios siguen pendientes. La página provisional lleva `noindex`.
 
 ## Requisitos
 
@@ -21,6 +21,8 @@ pnpm test
 ```
 
 En PowerShell de este equipo, usa `pnpm.cmd` en lugar de `pnpm` para evitar el bloqueo de `pnpm.ps1` por la política de scripts. Ambos invocan pnpm. En CMD se puede usar `pnpm`.
+
+Para probar el recorrido en Chrome local, inicia `pnpm dev` y ejecuta `pnpm test:browser` en otra terminal. Esta prueba usa la instalación local de Chrome; los navegadores adicionales se revisarán en F9-01.
 
 ## Organización
 

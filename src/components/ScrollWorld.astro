@@ -1,0 +1,76 @@
+---
+import { tourSegments } from '../data/tour';
+import { videoUrls } from '../data/media';
+import { createTourTimeline } from '../scripts/timeline';
+
+const timeline = createTourTimeline(tourSegments);
+const isDev = import.meta.env.DEV;
+---
+
+<section class="world" data-world style={`height: ${100 * (timeline.totalUnits + 1)}svh`} aria-label="Recorrido visual de Sonríe">
+  <div class="stage" data-stage>
+    <div class="fallback" aria-hidden="true"></div>
+    {timeline.segments.map((segment, index) => (
+      <video
+        class="clip"
+        data-clip
+        data-index={index}
+        src={videoUrls[segment.clipAsset]}
+        preload="none"
+        muted
+        playsinline
+        aria-hidden="true"
+        tabindex="-1"
+      />
+    ))}
+    <div class="shade" aria-hidden="true"></div>
+    <div class="copy">
+      <p class="eyebrow">Recorrido en preparación · {timeline.segments.length} tramos</p>
+      <h2>Conoce Sonríe</h2>
+      <p data-status role="status" aria-live="polite">Cargando el primer tramo…</p>
+      <a href="#despues-del-recorrido">Saltar el recorrido</a>
+    </div>
+    <div class="counter" aria-hidden="true"><span data-counter>01</span> / 05</div>
+    <nav class="stops" aria-label="Ir a una parada del recorrido">
+      {timeline.segments.map((_, index) => (
+        <button type="button" data-goto-stop={index} aria-label={`Ir a la parada ${index + 1}`}>
+          {String(index + 1).padStart(2, '0')}
+        </button>
+      ))}
+    </nav>
+    {isDev && <output class="debug" data-debug aria-label="Depuración del recorrido">Iniciando recorrido…</output>}
+  </div>
+</section>
+
+<script>
+  import { initMotion } from '../scripts/motion';
+  initMotion();
+</script>
+
+<style>
+  .world { position: relative; background: #173b40; }
+  .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; color: white; background: #173b40; }
+  .fallback, .clip, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fallback { background: radial-gradient(circle at 70% 30%, #337477, #173b40 70%); }
+  .clip { object-fit: cover; opacity: 0; transition: opacity 180ms ease; }
+  .clip.is-active { opacity: 1; }
+  .shade { pointer-events: none; background: linear-gradient(90deg, rgb(7 30 34 / 77%), transparent 80%), linear-gradient(0deg, rgb(7 30 34 / 65%), transparent 45%); }
+  .copy { position: absolute; z-index: 2; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); max-width: 34rem; }
+  .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: .75rem; }
+  h2 { margin: .6rem 0; font-size: clamp(2.75rem, 7vw, 6rem); line-height: 1; }
+  [data-status] { min-height: 1.5em; margin: 1.25rem 0; }
+  a { display: inline-block; padding: .75rem 1rem; border: 1px solid currentColor; border-radius: 999px; text-underline-offset: .2em; }
+  a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
+  .counter { position: absolute; z-index: 2; right: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); font-variant-numeric: tabular-nums; }
+  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; display: flex; flex-direction: column; gap: .5rem; transform: translateY(-50%); }
+  .stops button { width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / 75%); border-radius: 50%; background: rgb(7 30 34 / 65%); color: white; cursor: pointer; font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .stops button[aria-current='step'] { background: white; color: #173b40; }
+  .stops button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+  .debug { position: absolute; z-index: 3; left: 1rem; top: 1rem; max-width: calc(100% - 2rem); padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 monospace; }
+  .world[data-motion='off'] { height: auto !important; }
+  .world[data-motion='off'] .stage { position: relative; min-height: 100svh; height: auto; }
+  .world[data-motion='off'] .clip { display: none; }
+  .world[data-motion='off'] .stops { display: none; }
+  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } }
+  @media (prefers-reduced-motion: reduce) { .clip { transition: none; } }
+</style>

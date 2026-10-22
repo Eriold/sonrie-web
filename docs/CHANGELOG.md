@@ -37,3 +37,19 @@
 - Se añadieron pruebas de fronteras, límites, saltos, retroceso y configuración inválida con `pnpm test`.
 - Se verificaron pruebas, chequeo de tipos y build estático.
 - F1-06 quedó registrado en el commit local `b65daf3`; F2-01 no se ha enviado a GitHub.
+
+## 2026-10-22 — F2-02, stage con videos
+
+- Se hizo commit local de F2-01 como `b900594`, sin push.
+- Se añadió el stage sticky con cinco videos, sincronización GSAP/ScrollTrigger y Lenis.
+- Astro genera URL de los MP4 desde `assets/`; no se alteraron los originales.
+- Se añadió salida accesible y vista estática para movimiento reducido o ahorro de datos.
+- Chrome local verificó avance, retroceso y pausa de los cinco videos mediante `pnpm test:browser`.
+- Se hizo que la prueba de navegador espere el stage tras reinicios de Vite; la repetición pasó.
+
+## 2026-10-22 — F2-03, navegación del recorrido
+
+- Se eliminó el padding global para que el video ocupe el ancho disponible completo en escritorio y móvil.
+- Se añadieron saltos a las cinco paradas, estado accesible de parada actual y panel de depuración exclusivo de desarrollo.
+- Los cambios rápidos de tramo vuelven al fondo de reserva mientras se prepara el nuevo video.
+- Chrome local verificó saltos, scroll rápido, regreso, ancho completo, movimiento reducido y ausencia de errores de página.
