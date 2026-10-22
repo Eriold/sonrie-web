@@ -1,6 +1,6 @@
 # Estado y checklist — Sonríe Urrao
 
-**Actualizado:** 2026-10-22. **Estado global:** base Astro estática en `main`, con commit inicial y remoto `origin`; recorrido y contenido comercial pendientes. **Siguiente tarea técnica:** F2-01. Estados válidos: `PENDING`, `IN_PROGRESS`, `COMPLETED`, `BLOCKED`, `NEEDS_REVIEW`. Solo usar `COMPLETED` tras comprobar el criterio de aceptación.
+**Actualizado:** 2026-10-22. **Estado global:** base Astro estática y función pura del recorrido implementadas; stage y contenido comercial pendientes. **Siguiente tarea técnica:** F2-02. Estados válidos: `PENDING`, `IN_PROGRESS`, `COMPLETED`, `BLOCKED`, `NEEDS_REVIEW`. Solo usar `COMPLETED` tras comprobar el criterio de aceptación.
 
 La [especificación completa](REQUIREMENTS.md) rige cada tarea. Los IDs permiten retomar trabajo y registrar pruebas. En las tablas, la columna **Resultado** resume la verificación o el motivo pendiente. Al ejecutar cada tarea, agregar debajo de su fase cualquier observación, comando y archivos concretos afectados.
 
@@ -20,7 +20,7 @@ La [especificación completa](REQUIREMENTS.md) rige cada tarea. Los IDs permiten
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F2-01 | PENDING | Definir `tour.ts` tipado y función pura que traduzca scroll a segmento, fase, progreso de video y parada; cubrir límites y retroceso. | `src/data/tour.ts`, `src/scripts/timeline.ts`, pruebas | F1-03 | Pendiente. |
+| F2-01 | COMPLETED | Definir `tour.ts` tipado y función pura que traduzca scroll a segmento, fase, progreso de video y parada; cubrir límites y retroceso. | `src/data/tour.ts`, `src/scripts/timeline.ts`, pruebas | F1-03 | Cinco segmentos configurables; 4 pruebas cubren fases, fronteras, límites, saltos, retroceso y configuración inválida. `pnpm.cmd check` y `pnpm.cmd build` correctos. |
 | F2-02 | PENDING | Crear stage sticky, ScrollTrigger y Lenis sincronizados; cinco clips responden al scroll en ambos sentidos y se detienen con él. | `src/components/ScrollWorld.astro`, `src/scripts/world.ts`, `src/scripts/motion.ts` | F2-01 | Pendiente. |
 | F2-03 | PENDING | Soportar saltos a paradas, scroll rápido, regreso y panel de depuración solo en desarrollo. | componentes/scripts del recorrido | F2-02 | Pendiente. |
 
@@ -103,3 +103,5 @@ F1-07 preparó el repositorio local para GitHub. El enlace remoto queda pendient
 Tras F1-07, el usuario creó el commit inicial `8de4993` en `main` y configuró `origin` hacia `Eriold/sonrie-web`; las notas anteriores describen el estado histórico. F1-06 consultó la referencia Arko y sus rutas de licencia (404) y ejecutó `pnpm.cmd media:inspect` sobre los cinco originales. Se detectaron cuatro pistas AAC y keyframes escasos; los resultados completos están en `docs/MEDIA.md`. El almacén de pnpm ahora se fija dentro de la carpeta. Próxima tarea: F2-01.
 
 Verificación de cierre de F1-06: `pnpm.cmd install --offline --frozen-lockfile` terminó sin cambios; `pnpm.cmd check` informó 0 errores, 0 advertencias y 0 sugerencias; `pnpm.cmd build` generó una página estática. `git diff --check` terminó sin errores y `git diff --name-only -- assets` no listó cambios. Se verificó que el almacén efectivo de pnpm apunta a `D:\Proyectos\Sonrie\landingpage\.pnpm-store\v11`.
+
+El usuario autorizó un commit local de F1-06, creado como `b65daf3`; no hubo push. En F2-01 se consultó de nuevo `world.ts` de Arko y se implementó un timeline propio con video y parada por segmento. `pnpm.cmd test` falló inicialmente porque faltaban los módulos y, tras implementarlos, pasó 4/4. `pnpm.cmd check` informó 0 errores, 0 advertencias y 0 sugerencias; `pnpm.cmd build` generó 1 página estática. Los medios aún no se publican ni se reproducen: corresponde a F2-02 y F4-02.

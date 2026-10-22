@@ -30,3 +30,10 @@
 - Se añadió `pnpm media:inspect` para examinar los cinco MP4 sin modificarlos.
 - Se registró la ausencia de licencia escrita identificable en Arko y la aclaración posterior del usuario sobre el permiso verbal de Midudev para usar su implementación; no se trasladarán identidad ni medios de Arko.
 - Se documentaron AV1, cuatro pistas AAC, keyframes escasos, color BT.709 y `faststart`.
+
+## 2026-10-22 — F2-01, timeline determinista
+
+- Se creó la configuración tipada de cinco segmentos y la función pura de posición global de scroll.
+- Se añadieron pruebas de fronteras, límites, saltos, retroceso y configuración inválida con `pnpm test`.
+- Se verificaron pruebas, chequeo de tipos y build estático.
+- F1-06 quedó registrado en el commit local `b65daf3`; F2-01 no se ha enviado a GitHub.

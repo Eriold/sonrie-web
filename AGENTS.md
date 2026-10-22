@@ -15,7 +15,7 @@ Trabaja y responde siempre en español. Lee `start.txt` como especificación fue
 - Usa exclusivamente pnpm para instalar dependencias y ejecutar scripts del proyecto. En PowerShell invoca `pnpm.cmd` si la política de ejecución bloquea `pnpm.ps1`; en CMD puedes invocar `pnpm` directamente. No uses npm ni yarn como gestores del proyecto.
 - Separa contenido, configuración de paradas, medios y lógica del scroll. El tiempo del video depende del scroll y debe ser reversible.
 - Conserva los originales en `assets/`. No inventes datos del negocio, servicios, profesionales, horarios, contacto, credenciales, reseñas ni contenido clínico definitivo. Lo no confirmado queda marcado para validación y fuera de producción.
-- No publiques ni despliegues sin autorización. No hagas commits ni pushes automáticos.
+- No publiques ni despliegues sin autorización. Al empezar una fase nueva, haz un commit local de la fase anterior una vez verificada; no hagas pushes automáticos.
 - Puedes actuar dentro de esta carpeta para este proyecto. Consulta primero al usuario antes de modificar el sistema operativo, trabajar fuera de esta carpeta o crear/cambiar recursos externos en GitHub.
 - Mantén accesibles la navegación y el contenido comercial si fallan los videos o se reduce el movimiento.
 
