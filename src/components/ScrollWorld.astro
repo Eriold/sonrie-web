@@ -1,9 +1,10 @@
 ---
 import { tourSegments } from '../data/tour';
-import { videoUrls } from '../data/media';
+import { photoUrls, posterUrls, videoUrls } from '../data/media';
 import { createTourTimeline } from '../scripts/timeline';
 
 const timeline = createTourTimeline(tourSegments);
+const stopSegments = timeline.segments.flatMap((segment, segmentIndex) => segment.stopUnits > 0 ? [{ segment, segmentIndex }] : []);
 const isDev = import.meta.env.DEV;
 ---
 
@@ -15,6 +16,7 @@ const isDev = import.meta.env.DEV;
         class="clip"
         data-clip
         data-index={index}
+        data-asset={segment.clipAsset}
         src={videoUrls[segment.clipAsset]}
         preload="none"
         muted
@@ -23,17 +25,44 @@ const isDev = import.meta.env.DEV;
         tabindex="-1"
       />
     ))}
+    {timeline.segments.map((segment, index) => segment.stopPhotoAsset && (
+      <img
+        class="stop-image"
+        data-poster
+        data-index={index}
+        data-asset={segment.clipAsset}
+        src={posterUrls[segment.clipAsset]}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    ))}
+    {timeline.segments.map((segment, index) => segment.stopPhotoAsset && (
+      <img
+        class="stop-image"
+        data-photo
+        data-index={index}
+        data-asset={segment.stopPhotoAsset}
+        src={photoUrls[segment.stopPhotoAsset]}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+      />
+    ))}
     <div class="shade" aria-hidden="true"></div>
-    {timeline.segments.map((segment, index) => (
+    {stopSegments.map(({ segment, segmentIndex }, stopIndex) => (
       <section
         class="stop"
         data-stop
+        data-index={segmentIndex}
         data-stop-id={segment.stopId}
-        aria-labelledby={`stop-title-${index + 1}`}
+        aria-labelledby={`stop-title-${stopIndex + 1}`}
         hidden
       >
         <p class="stop-eyebrow">Parada del recorrido</p>
-        <h3 id={`stop-title-${index + 1}`}>Parada {index + 1}</h3>
+        <h3 id={`stop-title-${stopIndex + 1}`}>Parada {stopIndex + 1}</h3>
         <p>Contenido en preparación.</p>
       </section>
     ))}
@@ -43,14 +72,24 @@ const isDev = import.meta.env.DEV;
       <p data-status role="status" aria-live="polite">Cargando el primer tramo…</p>
       <a href="#despues-del-recorrido">Saltar el recorrido</a>
     </div>
-    <div class="counter" aria-hidden="true"><span data-counter>01</span> / 05</div>
+    <div class="counter" aria-hidden="true"><span data-counter>01</span> / {String(timeline.segments.length).padStart(2, '0')}</div>
     <nav class="stops" aria-label="Ir a una parada del recorrido">
-      {timeline.segments.map((_, index) => (
-        <button type="button" data-goto-stop={index} aria-label={`Ir a la parada ${index + 1}`}>
-          {String(index + 1).padStart(2, '0')}
+      {stopSegments.map(({ segmentIndex }, stopIndex) => (
+        <button type="button" data-goto-stop={segmentIndex} aria-label={`Ir a la parada ${stopIndex + 1}`}>
+          {String(stopIndex + 1).padStart(2, '0')}
         </button>
       ))}
     </nav>
+    {isDev && (
+      <label class="mode-picker" data-mode-picker hidden>
+        Fondo de esta parada
+        <select data-mode-select>
+          <option value="video-freeze">Video congelado</option>
+          <option value="poster-image">Póster del video</option>
+          <option value="high-res-image">Foto homónima</option>
+        </select>
+      </label>
+    )}
     {isDev && <output class="debug" data-debug aria-label="Depuración del recorrido">Iniciando recorrido…</output>}
   </div>
 </section>
@@ -63,10 +102,12 @@ const isDev = import.meta.env.DEV;
 <style>
   .world { position: relative; background: #173b40; }
   .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; color: white; background: #173b40; }
-  .fallback, .clip, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
+  .fallback, .clip, .stop-image, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
   .fallback { background: radial-gradient(circle at 70% 30%, #337477, #173b40 70%); }
   .clip { object-fit: cover; opacity: 0; transition: opacity 180ms ease; }
   .clip.is-active { opacity: 1; }
+  .stop-image { object-fit: cover; object-position: center; opacity: 0; transition: opacity 180ms ease; pointer-events: none; }
+  .stop-image.is-active { opacity: 1; }
   .shade { pointer-events: none; background: linear-gradient(90deg, rgb(7 30 34 / 77%), transparent 80%), linear-gradient(0deg, rgb(7 30 34 / 65%), transparent 45%); }
   .stop { position: absolute; z-index: 2; top: clamp(5rem, 12vh, 8rem); left: clamp(1.5rem, 6vw, 6rem); max-width: min(26rem, calc(100% - 6rem)); padding: 1.25rem 1.5rem; border: 1px solid rgb(255 255 255 / 50%); border-radius: 1rem; background: rgb(7 30 34 / 82%); box-shadow: 0 1rem 2rem rgb(0 0 0 / 15%); }
   .stop[hidden] { display: none; }
@@ -85,10 +126,15 @@ const isDev = import.meta.env.DEV;
   .stops button[aria-current='step'] { background: white; color: #173b40; }
   .stops button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
   .debug { position: absolute; z-index: 3; left: 1rem; top: 1rem; max-width: calc(100% - 2rem); padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 monospace; }
+  .mode-picker { position: absolute; z-index: 4; top: 1rem; right: 1rem; padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 sans-serif; }
+  .mode-picker[hidden] { display: none; }
+  .mode-picker select { display: block; margin-top: .25rem; padding: .25rem; border: 1px solid white; border-radius: .25rem; background: #173b40; color: white; }
+  .mode-picker select:focus-visible { outline: 3px solid white; outline-offset: 3px; }
   .world[data-motion='off'] { height: auto !important; }
   .world[data-motion='off'] .stage { position: relative; min-height: 100svh; height: auto; }
   .world[data-motion='off'] .clip { display: none; }
+  .world[data-motion='off'] .stop-image { display: none; }
   .world[data-motion='off'] .stops { display: none; }
-  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } }
-  @media (prefers-reduced-motion: reduce) { .clip { transition: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .debug { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .clip, .stop-image { transition: none; } }
 </style>

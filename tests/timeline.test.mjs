@@ -4,15 +4,21 @@ import { tourSegments } from '../src/data/tour.ts';
 import { createTourTimeline, resolveTourPosition } from '../src/scripts/timeline.ts';
 
 const sample = [
-  { id: 'a', clipAsset: 'a.mp4', durationSeconds: 10, videoUnits: 4, stopUnits: 2, stopId: 'stop-a' },
-  { id: 'b', clipAsset: 'b.mp4', durationSeconds: 6, videoUnits: 3, stopUnits: 1, stopId: 'stop-b' },
+  { id: 'a', clipAsset: 'a.mp4', durationSeconds: 10, videoUnits: 4, stopUnits: 2, stopId: 'stop-a', stopMediaMode: 'video-freeze', stopPhotoAsset: null },
+  { id: 'b', clipAsset: 'b.mp4', durationSeconds: 6, videoUnits: 3, stopUnits: 1, stopId: 'stop-b', stopMediaMode: 'video-freeze', stopPhotoAsset: null },
 ];
 
-test('la configuración contiene cinco clips y cinco paradas sin asignar espacios', () => {
+test('la configuración conserva cinco videos y omite solo la foto del cuarto', () => {
   assert.deepEqual(tourSegments.map((segment) => segment.clipAsset), [
     'Parte_1.mp4', 'Parte_2.mp4', 'Parte_3.mp4', 'Parte_4.mp4', 'Parte_5.mp4',
   ]);
-  assert.equal(new Set(tourSegments.map((segment) => segment.stopId)).size, 5);
+  assert.equal(new Set(tourSegments.map((segment) => segment.stopId).filter(Boolean)).size, 4);
+  assert.deepEqual(tourSegments.map((segment) => segment.stopPhotoAsset), [
+    'Parte_1.webp', 'Parte_2.webp', 'Parte_3.webp', null, 'Parte_5.webp',
+  ]);
+  assert.deepEqual(tourSegments.map((segment) => segment.stopMediaMode), [
+    'high-res-image', 'high-res-image', 'high-res-image', 'video-freeze', 'high-res-image',
+  ]);
 });
 
 test('resuelve video, parada y fronteras con el segmento correcto', () => {
@@ -54,11 +60,13 @@ test('limita posiciones fuera de rango y mantiene el resultado al retroceder o s
 });
 
 test('cada intervalo de parada mantiene su duración configurable y se recupera al volver', () => {
-  const configured = tourSegments.map((segment, index) => ({ ...segment, stopUnits: index + 1 }));
+  const configured = tourSegments.map((segment, index) => ({ ...segment, stopUnits: segment.stopPlacement === 'none' ? 0 : index + 1 }));
   const timeline = createTourTimeline(configured);
   assert.equal(timeline.segments.length, 5);
   for (const [index, segment] of timeline.segments.entries()) {
-    assert.equal(segment.end - segment.stopStart, index + 1);
+    if (segment.stopPlacement === 'none') continue;
+    if (segment.stopPlacement === 'before') assert.equal(segment.videoStart - segment.stopStart, index + 1);
+    else assert.equal(segment.end - segment.stopStart, index + 1);
     const midpoint = segment.stopStart + (index + 1) / 2;
     const firstVisit = resolveTourPosition(timeline, midpoint);
     assert.equal(firstVisit.phase, 'stop');
@@ -74,4 +82,8 @@ test('rechaza configuración vacía, duplicada o con longitudes inválidas', () 
   assert.throws(() => createTourTimeline([sample[0], sample[0]]), /duplicado/i);
   assert.throws(() => createTourTimeline([{ ...sample[0], videoUnits: 0 }]), /videoUnits/);
   assert.throws(() => createTourTimeline([{ ...sample[0], durationSeconds: Number.NaN }]), /durationSeconds/);
+  assert.throws(() => createTourTimeline([{ ...sample[0], stopMediaMode: 'high-res-image', stopPhotoAsset: null }]), /stopPhotoAsset/);
+  assert.throws(() => createTourTimeline([{ ...sample[0], stopMediaMode: 'unknown' }]), /stopMediaMode/);
+  assert.throws(() => createTourTimeline([{ ...sample[0], stopPlacement: 'unknown' }]), /stopPlacement/);
+  assert.throws(() => createTourTimeline([{ ...sample[0], stopPlacement: 'none' }]), /parada/);
 });

@@ -60,3 +60,23 @@
 - Se añadieron cinco paneles provisionales que aparecen en los intervalos de parada configurados y se ocultan durante cada video.
 - Se expuso el ID y progreso de la parada en el stage y el panel de depuración.
 - Pruebas verificaron longitudes configurables, ida y vuelta por las cinco paradas y fotograma estable durante una parada.
+
+## 2026-10-22 — F3-02, fondos configurables por parada
+
+- Se configuraron fotos WebP homónimas como fondo predeterminado de las paradas 1–4; la parada 5 termina con video congelado.
+- Se extrajeron cuatro pósters livianos del último frame de sus videos sin modificar los originales.
+- Se añadieron modos `video-freeze`, `poster-image` y `high-res-image`, con selector exclusivo de desarrollo.
+- Las imágenes llenan el escenario manteniendo proporción en escritorio y móvil; se documentaron las diferencias de encuadre observadas para revisión posterior.
+
+## 2026-10-22 — Corrección de secuencia audiovisual
+
+- Las fotos aparecen antes de sus videos: 1→1, 2→2, 3→3 y `Parte_4.webp`→`Parte_5.mp4`.
+- Se retiró `Parte_4.mp4` de la secuencia sin tocar su archivo original; no se renombró `Parte_4.webp`.
+- Los cuatro pósters de comparación se regeneraron desde el primer fotograma de cada video activo.
+- Se verificó visualmente la correspondencia de las cuatro fotos con los fotogramas iniciales y en Chrome el orden, los saltos, el regreso y el cierre.
+
+## 2026-10-22 — Corrección del cuarto tramo y nombre de la foto
+
+- Se restituyó `Parte_4.mp4` entre los videos 3 y 5; solo este tramo carece de foto y parada previa.
+- Se renombró `assets/Parte_4.webp` a `assets/Parte_5.webp` y se actualizaron las referencias y pruebas.
+- La navegación conserva cuatro botones de parada fotográfica para cinco videos. Chrome verificó el paso directo entre los videos 3 y 4 y la foto antes del video 5.

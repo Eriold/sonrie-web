@@ -1,6 +1,6 @@
 # Sonríe Urrao
 
-Landing estática en preparación para Sonríe Urrao. El recorrido provisional muestra cinco videos a ancho completo, controlados por scroll, con saltos a sus paradas. Los fondos de las paradas, los contenidos comerciales y la revisión final de los medios siguen pendientes. La página provisional lleva `noindex`.
+Landing estática en preparación para Sonríe Urrao. El recorrido provisional muestra los cinco videos en orden, controlados por scroll. Hay una foto antes de los videos 1, 2, 3 y 5; el video 4 continúa directamente desde el 3, sin foto previa. `Parte_5.webp` abre el video 5. Cada portada permite comparar en desarrollo la foto, un póster del primer fotograma y el video congelado. Los contenidos comerciales siguen pendientes. La página provisional lleva `noindex`.
 
 ## Requisitos
 
