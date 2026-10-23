@@ -219,9 +219,9 @@ const isDev = import.meta.env.DEV;
   .timeline-slider { position: absolute; inset: 0; z-index: 1; cursor: ns-resize; touch-action: none; }
   .timeline-slider:focus-visible { outline: 2px solid white; outline-offset: 3px; border-radius: 999px; }
   .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 3px; transform: translateX(-50%); border-radius: 999px; pointer-events: none; }
-  .timeline-line { height: 100%; background: rgb(255 255 255 / 55%); }
-  .timeline-progress { height: var(--tour-progress); background: #a8f5da; box-shadow: 0 0 10px rgb(168 245 218 / 65%); }
-  .timeline-indicator { position: absolute; z-index: 3; left: -.65rem; top: var(--tour-progress); width: .65rem; height: .65rem; border: 2px solid #a8f5da; border-radius: 50%; background: #173b40; box-shadow: 0 0 8px rgb(168 245 218 / 85%); transform: translateY(-50%); pointer-events: none; }
+  .timeline-line { height: 100%; background: rgb(255 255 255 / 60%); box-shadow: 0 0 0 3px rgb(7 30 34 / 45%); }
+  .timeline-progress { height: var(--tour-progress); background: #c9f4e5; box-shadow: 0 0 8px rgb(201 244 229 / 65%); }
+  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 3.5rem; height: 3px; border-radius: 999px; background: white; box-shadow: 0 0 0 1px rgb(7 30 34 / 75%), 0 0 12px rgb(255 255 255 / 85%); transform: translate(-50%, -50%); pointer-events: none; }
   .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / 75%); border-radius: 50%; background: rgb(7 30 34 / 85%); color: white; cursor: pointer; touch-action: none; font-size: .8rem; font-variant-numeric: tabular-nums; transform: translate(-50%, -50%); }
   .stops button[aria-current='step'] { background: white; color: #173b40; }
   .stops button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
@@ -241,7 +241,7 @@ const isDev = import.meta.env.DEV;
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
-  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-indicator { width: 2.9rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }

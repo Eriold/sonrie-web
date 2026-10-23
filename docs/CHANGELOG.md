@@ -189,3 +189,9 @@
 - Los números 01–05 quedaron sobre una línea proporcional al recorrido, con tramo iluminado e indicador de posición.
 - Ahora se puede tocar, hacer clic o arrastrar entre marcas para ir a un punto intermedio; también funciona con flechas, Page Up/Down, Home y End.
 - Las pruebas de Chrome cubrieron escritorio, tacto móvil, regreso, botones y movimiento reducido; las capturas de dispositivos reales siguen pendientes de revisión.
+
+## 2026-10-23 — Indicador de la barra más legible
+
+- El punto verde se sustituyó por una línea horizontal blanca que cruza el riel y señala el progreso, con borde oscuro para distinguirla sobre fondos claros.
+- Se reforzó el contraste del riel y se conservó la navegación continua y los botones 01–05.
+- La apariencia se revisó en capturas locales de escritorio y móvil; falta comprobarla en los teléfonos físicos reportados.
