@@ -105,6 +105,12 @@ Con `SONRIE_AUDIT_SLOW=1` se simuló 4 Mb/s y 150 ms de latencia. Las entradas a
 
 Estos son los nombres completos reales. La asignación a roles, identidad y espacios exige inspección visual y validación editorial. Hay cuatro PNG para cinco roles previstos; no asignar un personaje ficticio a un profesional real.
 
+### F5-01 — Inspección visual y asignación provisional (2026-10-22)
+
+Se abrieron los cuatro PNG. Todos son ilustraciones de cuerpo completo con fondo transparente: los tres de 1024×1536 tienen entre 69,7 % y 75,9 % de píxeles totalmente transparentes; el de 1086×1448 tiene 72,8 %. Los bordes y sombras usan alfa parcial, que debe conservarse al superponerlos a las fotografías. El archivo de recepción muestra portapapeles y pañuelo verde; el del espejo muestra ese instrumento y uniforme verde claro; el del modelo dental muestra una dentadura y uniforme azul; el cuarto muestra otra figura con modelo de dentadura y uniforme azul. Esas pistas visuales no verifican cargos, servicios ni identidad de personas reales.
+
+`src/data/characters.ts` registra los cuatro como `prototype` y usa etiquetas públicas genéricas de guía ilustrativa. Asignación editable por parada: fotos 1 y 2 → recepción; foto 3 → espejo; foto 5 → modelo dental; foto 6 → cuarta figura. Se reutiliza el primer prototipo porque hay cinco fotos y cuatro PNG. Cada parada reserva el primer 35 % de su progreso de scroll para apreciar la fotografía sola; el personaje se habilita después de ese umbral y se oculta al retroceder. Los originales futuros podrán reemplazar la referencia de imagen sin cambiar la secuencia ni los nombres de las paradas. La superposición visual y su adaptación responsive pertenecen a F5-02; el contenido editorial de los diálogos sigue pendiente.
+
 ## Pendientes audiovisuales
 
 - [x] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad. F4-01: tabla y cinco láminas anteriores.

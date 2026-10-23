@@ -116,3 +116,9 @@
 - Se añadieron auditorías repetibles de tiempos de seek, bytes de video, heap JavaScript y audio.
 - Se difirió la asignación de `src` y la carga del siguiente video hasta pasar la mitad del tramo actual. La descarga inicial medida bajó a unos 3,0 MB.
 - Una red simulada de 4 Mb/s mostró demoras de 1,5–9,2 s al entrar en tramos; se conserva este riesgo para pruebas de dispositivos y navegadores antes de considerar derivados de los MP4.
+
+## 2026-10-22 — F5-01, prototipos de personajes
+
+- Se registró la fase 4 verificada en el commit local `bdb24af`, sin push ni las cuatro eliminaciones previas de `assets/`.
+- Se inspeccionaron los cuatro PNG y su transparencia; se asignaron como guías ilustrativas provisionales a las cinco paradas fotográficas.
+- Se configuró un umbral editable del 35 % de scroll dentro de cada parada para apreciar primero la fotografía. La superposición visual se implementará en F5-02.
