@@ -8,6 +8,13 @@ const expected = [
   { selector: '[data-clip]', names: [1, 2, 3, 4, 5].map((number) => `Parte_${number}.mp4`), folder: 'assets', type: 'video/mp4' },
   { selector: '[data-photo]', names: [1, 2, 3, 5, 6].map((number) => `Parte_${number}.webp`), folder: 'assets', type: 'image/webp' },
   { selector: '[data-poster]', names: [1, 2, 3, 4, 5].map((number) => `Parte_${number}.mp4`), folder: 'src/media/posters', type: 'image/webp' },
+  { selector: '[data-character]', names: [
+    'Friendly Mint Receptionist Illustration.png',
+    'Friendly Mint Receptionist Illustration.png',
+    'Friendly Anime Dentist with Dental Mirror.png',
+    'Friendly Anime Dentist Demonstrating Dental Model.png',
+    'Friendly Orthodontist Presenting Braces Model.png',
+  ], folder: 'assets', type: 'image/png' },
 ];
 const hash = (buffer) => createHash('sha256').update(buffer).digest('hex');
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
@@ -61,7 +68,7 @@ try {
   await failedVideo.waitForFunction(() => document.querySelector('[data-status]')?.textContent?.includes('Video no disponible'));
   assert.equal(await failedVideo.locator('[data-clip][data-index="2"].is-active').count(), 1, 'el clip anterior permanece visible si falla el cuarto');
 
-  console.log(JSON.stringify({ published: '5 MP4, 5 WebP, 5 pósters idénticos a sus fuentes', scroll: '5 videos activos', finalPhoto: 'ok', failedVideo: 'respaldo visible', pageErrors }));
+  console.log(JSON.stringify({ published: '5 MP4, 5 WebP, 5 pósters y 4 PNG idénticos a sus fuentes', scroll: '5 videos activos', finalPhoto: 'ok', failedVideo: 'respaldo visible', pageErrors }));
 } finally {
   await browser.close();
 }

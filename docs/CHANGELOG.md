@@ -122,3 +122,10 @@
 - Se registró la fase 4 verificada en el commit local `bdb24af`, sin push ni las cuatro eliminaciones previas de `assets/`.
 - Se inspeccionaron los cuatro PNG y su transparencia; se asignaron como guías ilustrativas provisionales a las cinco paradas fotográficas.
 - Se configuró un umbral editable del 35 % de scroll dentro de cada parada para apreciar primero la fotografía. La superposición visual se implementará en F5-02.
+
+## 2026-10-23 — F5-02, personajes sobre fotografías
+
+- Se registró F5-01 en el commit local `c9b200e`, sin push ni las cuatro eliminaciones anteriores de `assets/`.
+- Los prototipos aparecen después del 35 % de scroll de su fotografía, con entrada y salida reversibles. Se cargan cerca del umbral y no bloquean controles.
+- Se ajustó la posición móvil tras revisar capturas; el personaje deja libres la tarjeta superior y el bloque inferior.
+- Se comprobaron los cuatro PNG publicados por hash, cinco paradas, regreso, movimiento reducido y fallo de un personaje con la foto aún visible.

@@ -13,6 +13,10 @@ import poster2 from '../media/posters/Parte_2-poster.webp?url';
 import poster3 from '../media/posters/Parte_3-poster.webp?url';
 import poster4 from '../media/posters/Parte_4-poster.webp?url';
 import poster5 from '../media/posters/Parte_5-poster.webp?url';
+import recepcion from '../../assets/Friendly Mint Receptionist Illustration.png?url';
+import espejo from '../../assets/Friendly Anime Dentist with Dental Mirror.png?url';
+import modeloDental from '../../assets/Friendly Anime Dentist Demonstrating Dental Model.png?url';
+import modeloAparatos from '../../assets/Friendly Orthodontist Presenting Braces Model.png?url';
 
 export const videoUrls: Readonly<Record<string, string>> = {
   'Parte_1.mp4': parte1,
@@ -36,4 +40,11 @@ export const posterUrls: Readonly<Record<string, string>> = {
   'Parte_3.mp4': poster3,
   'Parte_4.mp4': poster4,
   'Parte_5.mp4': poster5,
+};
+
+export const characterUrls: Readonly<Record<string, string>> = {
+  'Friendly Mint Receptionist Illustration.png': recepcion,
+  'Friendly Anime Dentist with Dental Mirror.png': espejo,
+  'Friendly Anime Dentist Demonstrating Dental Model.png': modeloDental,
+  'Friendly Orthodontist Presenting Braces Model.png': modeloAparatos,
 };

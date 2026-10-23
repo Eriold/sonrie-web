@@ -1,4 +1,5 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { resolveStopCharacter, stopCharacters } from '../data/characters';
 import { tourSegments, type StopMediaMode } from '../data/tour';
 import { createTourTimeline, resolveTourPosition } from './timeline';
 
@@ -16,6 +17,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const videos = [...world.querySelectorAll<HTMLVideoElement>('[data-clip]')];
   const posters = [...world.querySelectorAll<HTMLImageElement>('[data-poster]')];
   const photos = [...world.querySelectorAll<HTMLImageElement>('[data-photo]')];
+  const characters = [...world.querySelectorAll<HTMLImageElement>('[data-character]')];
   if (!stage || !status || !counter || videos.length !== timeline.segments.length || stops.length !== timeline.segments.filter((segment) => segment.stopUnits > 0).length) return;
 
   if (staticMode) {
@@ -28,6 +30,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   let activeIndex = 0;
   let shownIndex = -1;
   let currentPhase: 'video' | 'stop' = 'video';
+  let currentStopId: string | null = null;
+  let currentStopProgress = 0;
   const loaded = new Set<number>();
   const failed = new Set<number>();
   const targetTimes = videos.map(() => 0);
@@ -35,8 +39,30 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const allImages = [...posters, ...photos];
   const preparedImages = new WeakSet<HTMLImageElement>();
   const preparingImages = new WeakSet<HTMLImageElement>();
+  const preparedCharacters = new WeakSet<HTMLImageElement>();
+  const preparingCharacters = new WeakSet<HTMLImageElement>();
   let visibleLayer: HTMLVideoElement | HTMLImageElement | undefined;
   let transitionTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const updateCharacter = (): void => {
+    const selected = currentPhase === 'stop' && stage.dataset.visual === 'high-res-image'
+      ? resolveStopCharacter(currentStopId, currentStopProgress) : null;
+    characters.forEach((image) => {
+      image.classList.toggle('is-visible', image.dataset.stopId === currentStopId
+        && image.dataset.asset === selected?.imageAsset && preparedCharacters.has(image));
+    });
+  };
+
+  const prepareCharacter = (stopId: string | null): void => {
+    const image = characters.find((entry) => entry.dataset.stopId === stopId);
+    if (!image || preparedCharacters.has(image) || preparingCharacters.has(image)) return;
+    preparingCharacters.add(image);
+    image.src = image.dataset.src ?? '';
+    image.decode().then(() => {
+      preparedCharacters.add(image);
+      updateCharacter();
+    }).catch(() => updateCharacter());
+  };
 
   const activateLayer = (next: HTMLVideoElement | HTMLImageElement, visual: string): void => {
     if (visibleLayer === next) {
@@ -99,6 +125,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     image.decode().then(() => {
       preparedImages.add(image);
       updateVisual();
+      updateCharacter();
     }).catch(() => updateVisual());
   };
 
@@ -156,6 +183,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     if (activeIndex !== state.segmentIndex) shownIndex = -1;
     activeIndex = state.segmentIndex;
     currentPhase = state.phase;
+    currentStopId = state.activeStopId;
+    currentStopProgress = state.stopProgress;
     const video = videos[activeIndex];
     targetTimes[activeIndex] = state.videoTimeSeconds;
     video.pause();
@@ -166,6 +195,10 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       if (index < 0 || index >= videos.length) continue;
       prepareImage(photos.find((image) => image.dataset.index === String(index)));
       prepareImage(posters.find((image) => image.dataset.index === String(index)));
+    }
+    const characterAssignment = stopCharacters.find((entry) => entry.stopId === state.activeStopId);
+    if (state.phase === 'stop' && characterAssignment && state.stopProgress >= characterAssignment.revealAfterProgress / 2) {
+      prepareCharacter(state.activeStopId);
     }
     seek(activeIndex);
     counter.textContent = String(activeIndex + 1).padStart(2, '0');
@@ -197,12 +230,14 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
         : `Tramo ${activeIndex + 1} de ${videos.length}. Desplázate para avanzar o retroceder.`;
     } else status.textContent = 'Video no disponible. Puedes saltar el recorrido.';
     updateVisual();
+    updateCharacter();
     if (debug) debug.textContent = `Tramo ${activeIndex + 1}/${videos.length} · ${state.phase} ${(state.stopProgress * 100).toFixed(0)}% · scroll ${(progress * 100).toFixed(1)}% · video ${state.videoTimeSeconds.toFixed(2)} s · ${stage.dataset.visual}`;
   };
 
   modeSelect?.addEventListener('change', () => {
     selectedModes[activeIndex] = modeSelect.value as StopMediaMode;
     updateVisual();
+    updateCharacter();
   });
 
   const trigger = ScrollTrigger.create({

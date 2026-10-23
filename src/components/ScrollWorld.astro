@@ -1,10 +1,16 @@
 ---
 import { tourSegments } from '../data/tour';
-import { photoUrls, posterUrls, videoUrls } from '../data/media';
+import { characterPrototypes, stopCharacters } from '../data/characters';
+import { characterUrls, photoUrls, posterUrls, videoUrls } from '../data/media';
 import { createTourTimeline } from '../scripts/timeline';
 
 const timeline = createTourTimeline(tourSegments);
 const stopSegments = timeline.segments.flatMap((segment, segmentIndex) => segment.stopUnits > 0 ? [{ segment, segmentIndex }] : []);
+const characterLayers = stopSegments.flatMap(({ segment, segmentIndex }) => {
+  const assignment = stopCharacters.find((entry) => entry.stopId === segment.stopId);
+  const character = characterPrototypes.find((entry) => entry.id === assignment?.characterId);
+  return character ? [{ segmentIndex, stopId: segment.stopId, character }] : [];
+});
 const isDev = import.meta.env.DEV;
 ---
 
@@ -66,6 +72,19 @@ const isDev = import.meta.env.DEV;
         <p>Contenido en preparación.</p>
       </section>
     ))}
+    {characterLayers.map(({ segmentIndex, stopId, character }) => (
+      <img
+        class="character"
+        data-character
+        data-stop-index={segmentIndex}
+        data-stop-id={stopId}
+        data-asset={character.imageAsset}
+        data-src={characterUrls[character.imageAsset]}
+        alt=""
+        aria-hidden="true"
+        decoding="async"
+      />
+    ))}
     <div class="copy">
       <p class="eyebrow">Recorrido en preparación · {timeline.segments.length} tramos</p>
       <h2>Conoce Sonríe</h2>
@@ -114,6 +133,8 @@ const isDev = import.meta.env.DEV;
   .stop-eyebrow { margin: 0 0 .5rem; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
   .stop h3 { margin: 0 0 .5rem; font-size: clamp(1.5rem, 4vw, 2.25rem); }
   .stop p:last-child { margin: 0; }
+  .character { position: absolute; z-index: 2; right: clamp(3.5rem, 7vw, 7rem); bottom: 0; max-width: min(45vw, 42rem); height: min(86svh, 56rem); object-fit: contain; object-position: bottom right; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(1.5rem); transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 240ms; }
+  .character.is-visible { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 240ms ease, transform 240ms ease, visibility 0s; }
   .copy { position: absolute; z-index: 2; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); max-width: 34rem; }
   .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: .75rem; }
   h2 { margin: .6rem 0; font-size: clamp(2.75rem, 7vw, 6rem); line-height: 1; }
@@ -134,7 +155,8 @@ const isDev = import.meta.env.DEV;
   .world[data-motion='off'] .stage { position: relative; min-height: 100svh; height: auto; }
   .world[data-motion='off'] .clip { display: none; }
   .world[data-motion='off'] .stop-image { display: none; }
+  .world[data-motion='off'] .character { display: none; }
   .world[data-motion='off'] .stops { display: none; }
-  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .debug { display: none; } }
-  @media (prefers-reduced-motion: reduce) { .clip, .stop-image { transition: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .debug { display: none; } }
+  @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }
 </style>

@@ -111,6 +111,12 @@ Se abrieron los cuatro PNG. Todos son ilustraciones de cuerpo completo con fondo
 
 `src/data/characters.ts` registra los cuatro como `prototype` y usa etiquetas públicas genéricas de guía ilustrativa. Asignación editable por parada: fotos 1 y 2 → recepción; foto 3 → espejo; foto 5 → modelo dental; foto 6 → cuarta figura. Se reutiliza el primer prototipo porque hay cinco fotos y cuatro PNG. Cada parada reserva el primer 35 % de su progreso de scroll para apreciar la fotografía sola; el personaje se habilita después de ese umbral y se oculta al retroceder. Los originales futuros podrán reemplazar la referencia de imagen sin cambiar la secuencia ni los nombres de las paradas. La superposición visual y su adaptación responsive pertenecen a F5-02; el contenido editorial de los diálogos sigue pendiente.
 
+### F5-02 — Prototipos superpuestos (2026-10-23)
+
+Los cuatro PNG se importan por URL desde `assets/` y Astro los publica con hashes idénticos a sus originales. Cinco capas visuales referencian esos cuatro archivos según la configuración de F5-01. El primer personaje no inicia descarga al abrir la página: se prepara al llegar a la mitad del umbral del 35 % y aparece después de decodificarse, solo sobre la fotografía activa. La transición de entrada/salida dura 240 ms; con movimiento reducido queda desactivada. Los elementos no interceptan clics y usan `alt=""` porque son decorativos hasta que F5-03 aporte contenido y semántica de diálogo. Si falla un PNG, el fondo fotográfico queda visible.
+
+Chrome de producción verificó las cinco paradas en avance y regreso, el umbral, la vista móvil de 390×844, movimiento reducido y fallo del PNG de recepción. Se revisaron capturas temporales de escritorio y móvil en `dist/`: la figura no cubre el título ni los controles en el tamaño móvil probado. La composición final con diálogos y avatares definitivos se revisará de nuevo en F5-03 y cuando lleguen los recursos originales.
+
 ## Pendientes audiovisuales
 
 - [x] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad. F4-01: tabla y cinco láminas anteriores.
