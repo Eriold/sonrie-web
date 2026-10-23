@@ -214,17 +214,19 @@ const isDev = import.meta.env.DEV;
   a { display: inline-block; padding: .75rem 1rem; border: 1px solid currentColor; border-radius: 999px; text-underline-offset: .2em; }
   a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
   .counter { position: absolute; z-index: 2; right: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); font-variant-numeric: tabular-nums; }
-  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; width: 2.75rem; height: min(68svh, 35rem); min-height: 18rem; padding-block: 1.375rem; box-sizing: border-box; transform: translateY(-50%); }
+  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; width: 2.75rem; height: min(68svh, 35rem); min-height: 18rem; padding-block: 1.375rem; box-sizing: border-box; border: 1px solid rgb(246 244 238 / 32%); border-radius: .35rem; background: rgb(14 25 28 / 76%); box-shadow: 0 .5rem 1.5rem rgb(0 0 0 / 18%); transform: translateY(-50%); }
   .timeline-rail { position: relative; width: 100%; height: 100%; --tour-progress: 0%; }
   .timeline-slider { position: absolute; inset: 0; z-index: 1; cursor: ns-resize; touch-action: none; }
-  .timeline-slider:focus-visible { outline: 2px solid white; outline-offset: 3px; border-radius: 999px; }
-  .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 3px; transform: translateX(-50%); border-radius: 999px; pointer-events: none; }
-  .timeline-line { height: 100%; background: rgb(255 255 255 / 60%); box-shadow: 0 0 0 3px rgb(7 30 34 / 45%); }
-  .timeline-progress { height: var(--tour-progress); background: #c9f4e5; box-shadow: 0 0 8px rgb(201 244 229 / 65%); }
-  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 3.5rem; height: 3px; border-radius: 999px; background: white; box-shadow: 0 0 0 1px rgb(7 30 34 / 75%), 0 0 12px rgb(255 255 255 / 85%); transform: translate(-50%, -50%); pointer-events: none; }
-  .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / 75%); border-radius: 50%; background: rgb(7 30 34 / 85%); color: white; cursor: pointer; touch-action: none; font-size: .8rem; font-variant-numeric: tabular-nums; transform: translate(-50%, -50%); }
-  .stops button[aria-current='step'] { background: white; color: #173b40; }
-  .stops button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+  .timeline-slider:focus-visible { outline: 2px solid #f6f4ee; outline-offset: 3px; border-radius: .2rem; }
+  .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 2px; transform: translateX(-50%); pointer-events: none; }
+  .timeline-line { height: 100%; background: rgb(246 244 238 / 45%); }
+  .timeline-progress { height: var(--tour-progress); background: #f6f4ee; }
+  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 3.5rem; height: 3px; background: #f6f4ee; box-shadow: 0 0 0 1px rgb(14 25 28 / 85%); transform: translate(-50%, -50%); pointer-events: none; }
+  .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; color: #f6f4ee; cursor: pointer; touch-action: none; font: 600 .75rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: .04em; transform: translate(-50%, -50%); }
+  .stops button::before { position: absolute; z-index: -1; inset: .42rem .15rem; border: 1px solid rgb(246 244 238 / 67%); border-radius: .15rem; background: #19282b; content: ''; }
+  .stops button[aria-current='step'] { color: #142124; }
+  .stops button[aria-current='step']::before { border-color: #f6f4ee; background: #f6f4ee; }
+  .stops button:focus-visible { outline: 2px solid #f6f4ee; outline-offset: 2px; }
   .debug { position: absolute; z-index: 3; left: 1rem; top: 1rem; max-width: calc(100% - 2rem); padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 monospace; }
   .mode-picker { position: absolute; z-index: 4; top: 1rem; right: 1rem; padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 sans-serif; }
   .mode-picker[hidden] { display: none; }
@@ -241,7 +243,7 @@ const isDev = import.meta.env.DEV;
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
-  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-indicator { width: 2.9rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .stops button::before { inset: .25rem .1rem; } .timeline-indicator { width: 2.9rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }

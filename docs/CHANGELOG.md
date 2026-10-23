@@ -195,3 +195,9 @@
 - El punto verde se sustituyó por una línea horizontal blanca que cruza el riel y señala el progreso, con borde oscuro para distinguirla sobre fondos claros.
 - Se reforzó el contraste del riel y se conservó la navegación continua y los botones 01–05.
 - La apariencia se revisó en capturas locales de escritorio y móvil; falta comprobarla en los teléfonos físicos reportados.
+
+## 2026-10-23 — Navegación con apariencia de tira de película
+
+- Se sustituyeron los botones circulares por marcas rectangulares y se usó una paleta neutra de marfil y gris carbón.
+- Una columna oscura translúcida mantiene legibles el riel, el progreso y los números sobre los fotogramas.
+- El comportamiento del control y sus saltos se conservaron; falta opinión visual en los teléfonos físicos.
