@@ -181,4 +181,5 @@
 ## 2026-10-23 — Instalación de FFmpeg en GitHub Actions
 
 - La primera ejecución tras el push falló al instalar: pnpm bloqueó el script de `@ffmpeg-installer/linux-x64@4.1.0`.
-- Se autorizó ese binario de desarrollo en `pnpm-workspace.yaml`; queda por verificar el nuevo workflow remoto.
+- Se autorizó ese binario de desarrollo en `pnpm-workspace.yaml`.
+- La siguiente ejecución de GitHub Actions pasó instalación, chequeo, pruebas, build y deploy. La URL pública respondió HTTP 200 y el recorrido móvil publicado pasó la prueba automatizada de Chrome.
