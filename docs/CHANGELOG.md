@@ -211,3 +211,14 @@
 
 - Se recuperó el relleno verde menta del tramo recorrido, diferenciado de la línea pendiente.
 - El indicador horizontal, las marcas rectangulares y el riel sin panel de fondo se conservan.
+
+## 2026-10-23 — Puntos de parada sin números
+
+- Se ocultaron los números de la barra y se cambiaron sus marcas rectangulares por círculos pequeños, blancos antes de alcanzarlos y verde menta después.
+- La línea recorrida conserva el verde menta anterior; la parte pendiente permanece clara.
+- Se retiró el contador numérico redundante de la esquina. Los botones siguen siendo accesibles por nombre y conservan su área táctil.
+
+## 2026-10-23 — Barra más estrecha y sin contornos
+
+- La línea pendiente y los puntos no alcanzados son blancos, sin bordes ni sombras oscuras; lo recorrido conserva el verde menta.
+- El ancho visual de la barra y del indicador horizontal baja aproximadamente 12 px; las áreas de interacción mantienen su tamaño.

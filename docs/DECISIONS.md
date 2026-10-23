@@ -141,3 +141,11 @@ El usuario pidió retirar la columna oscura de D-031. El riel conserva solo la l
 ## D-033 — Progreso coloreado sobre el riel abierto (2026-10-23)
 
 El usuario pidió recuperar la lectura de barra que se llena al avanzar. La parte recorrida vuelve a tener un color propio, verde menta `#79e2c1`, y aumenta a 4 px frente a los 2 px de la línea pendiente. El borde oscuro fino conserva contraste sobre escenas claras; el indicador horizontal continúa blanco. Solo cambia la presentación de `--tour-progress`: el cálculo, el arrastre y las marcas 01–05 permanecen.
+
+## D-034 — Paradas como puntos y progreso menta (2026-10-23)
+
+La línea pendiente queda marfil y la parte recorrida conserva el verde menta `#79e2c1` aprobado en D-033. Las cinco marcas visibles son círculos de 12 px: blancos antes de alcanzarlos y verde menta cuando el progreso llega a su posición. Al retroceder recuperan el blanco, en sincronía con el relleno reversible del riel. Cada círculo conserva su área de interacción anterior y el nombre accesible «Ir a la parada N», sin número visible. Se elimina también el contador duplicado de la esquina inferior; el estado textual del tramo y el valor del slider siguen disponibles. La línea horizontal de posición, las posiciones de las paradas y el motor de recorrido no cambian.
+
+## D-035 — Riel sin contornos y menor ancho visual (2026-10-23)
+
+El usuario precisó que la línea y los puntos no requieren negro. Se eliminan los contornos y sombras de ambos: blanco puro para lo pendiente y el mismo verde menta `#79e2c1` para lo recorrido. El ancho del contenedor visual y del indicador horizontal disminuye 12 px tanto en escritorio como en móvil. El slider y los botones conservan sus anchos de interacción anteriores (44 y 36 px) aunque sobresalgan del contenedor invisible, para mantener el arrastre y el toque cómodos.

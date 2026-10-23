@@ -124,7 +124,6 @@ const isDev = import.meta.env.DEV;
       <p data-status role="status" aria-live="polite">Cargando el primer tramo…</p>
       <a href="#despues-del-recorrido">Saltar el recorrido</a>
     </div>
-    <div class="counter" aria-hidden="true"><span data-counter>01</span> / {String(timeline.segments.length).padStart(2, '0')}</div>
     <nav class="stops" aria-label="Navegar por el recorrido">
       <div class="timeline-rail" data-timeline-rail>
         <div class="timeline-slider" data-timeline-slider role="slider" tabindex="0" aria-label="Posición del recorrido" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Inicio del recorrido">
@@ -137,9 +136,7 @@ const isDev = import.meta.env.DEV;
             data-goto-stop={segmentIndex}
             style={`--stop-desktop-position: ${100 * timeline.segments[segmentIndex].stopStart / timeline.totalUnits}%; --stop-mobile-position: ${100 * mobileTimeline.segments[segmentIndex].stopStart / mobileTimeline.totalUnits}%`}
             aria-label={`Ir a la parada ${stopIndex + 1}`}
-          >
-            {String(stopIndex + 1).padStart(2, '0')}
-          </button>
+          ></button>
         ))}
         <span class="timeline-indicator" aria-hidden="true"></span>
       </div>
@@ -213,19 +210,17 @@ const isDev = import.meta.env.DEV;
   [data-status] { min-height: 1.5em; margin: 1.25rem 0; }
   a { display: inline-block; padding: .75rem 1rem; border: 1px solid currentColor; border-radius: 999px; text-underline-offset: .2em; }
   a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
-  .counter { position: absolute; z-index: 2; right: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); font-variant-numeric: tabular-nums; }
-  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; width: 2.75rem; height: min(68svh, 35rem); min-height: 18rem; padding-block: 1.375rem; box-sizing: border-box; transform: translateY(-50%); }
-  .timeline-rail { position: relative; width: 100%; height: 100%; --tour-progress: 0%; }
-  .timeline-slider { position: absolute; inset: 0; z-index: 1; cursor: ns-resize; touch-action: none; }
+  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; width: 2rem; height: min(68svh, 35rem); min-height: 18rem; padding-block: 1.375rem; box-sizing: border-box; transform: translateY(-50%); }
+  .timeline-rail { position: relative; width: 100%; height: 100%; --tour-progress: 0%; --rail-visited: #79e2c1; }
+  .timeline-slider { position: absolute; z-index: 1; top: 0; bottom: 0; left: 50%; width: 2.75rem; cursor: ns-resize; touch-action: none; transform: translateX(-50%); }
   .timeline-slider:focus-visible { outline: 2px solid #f6f4ee; outline-offset: 3px; border-radius: .2rem; }
   .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 2px; transform: translateX(-50%); pointer-events: none; }
-  .timeline-line { height: 100%; background: rgb(246 244 238 / 65%); box-shadow: 0 0 0 1px rgb(14 25 28 / 65%); }
-  .timeline-progress { width: 4px; height: var(--tour-progress); background: #79e2c1; box-shadow: 0 0 0 1px rgb(14 25 28 / 80%); }
-  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 3.5rem; height: 3px; background: #f6f4ee; box-shadow: 0 0 0 1px rgb(14 25 28 / 85%); transform: translate(-50%, -50%); pointer-events: none; }
-  .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; color: #f6f4ee; cursor: pointer; touch-action: none; font: 600 .75rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: .04em; transform: translate(-50%, -50%); }
-  .stops button::before { position: absolute; z-index: -1; inset: .42rem .15rem; border: 1px solid rgb(246 244 238 / 67%); border-radius: .15rem; background: #19282b; content: ''; }
-  .stops button[aria-current='step'] { color: #142124; }
-  .stops button[aria-current='step']::before { border-color: #f6f4ee; background: #f6f4ee; }
+  .timeline-line { height: 100%; background: white; }
+  .timeline-progress { width: 4px; height: var(--tour-progress); background: var(--rail-visited); }
+  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 2.75rem; height: 3px; background: white; transform: translate(-50%, -50%); pointer-events: none; }
+  .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; cursor: pointer; touch-action: none; transform: translate(-50%, -50%); }
+  .stops button::before { width: .75rem; height: .75rem; border-radius: 50%; background: white; content: ''; }
+  .stops button[data-reached]::before { background: var(--rail-visited); }
   .stops button:focus-visible { outline: 2px solid #f6f4ee; outline-offset: 2px; }
   .debug { position: absolute; z-index: 3; left: 1rem; top: 1rem; max-width: calc(100% - 2rem); padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 monospace; }
   .mode-picker { position: absolute; z-index: 4; top: 1rem; right: 1rem; padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 sans-serif; }
@@ -243,7 +238,7 @@ const isDev = import.meta.env.DEV;
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
-  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .stops button::before { inset: .25rem .1rem; } .timeline-indicator { width: 2.9rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; width: 1.5rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-slider { width: 2.25rem; } .timeline-indicator { width: 2.15rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }

@@ -12,6 +12,7 @@ async function checkTimeline(page, mobile) {
   await slider.waitFor();
   assert.equal(await slider.getAttribute('aria-orientation'), 'vertical');
   assert.equal(await page.locator('[data-goto-stop]').count(), 5);
+  assert.deepEqual(await page.locator('[data-goto-stop]').allTextContents(), ['', '', '', '', '']);
   const track = await slider.boundingBox();
   assert.ok(track && track.height > 200);
 
@@ -26,6 +27,7 @@ async function checkTimeline(page, mobile) {
       && Number(stage.dataset.videoProgress) > 0.25;
   });
   assert.ok(Math.abs(Number(await slider.getAttribute('aria-valuenow')) - 32) <= 2);
+  assert.deepEqual(await page.locator('[data-goto-stop]').evaluateAll((buttons) => buttons.map((button) => button.hasAttribute('data-reached'))), [true, true, false, false, false]);
   assert.equal(await page.locator('[data-clip][data-index="1"]').evaluate((video) => video.paused), true);
 
   const dragTrack = await slider.boundingBox();
@@ -74,8 +76,10 @@ async function checkTimeline(page, mobile) {
   await page.waitForFunction(() => Number(document.querySelector('[role="slider"]')?.getAttribute('aria-valuenow')) > 62);
   await page.keyboard.press('Home');
   await page.waitForFunction(() => Number(document.querySelector('[role="slider"]')?.getAttribute('aria-valuenow')) === 0);
+  assert.deepEqual(await page.locator('[data-goto-stop]').evaluateAll((buttons) => buttons.map((button) => button.hasAttribute('data-reached'))), [true, false, false, false, false]);
   await page.keyboard.press('End');
   await page.waitForFunction(() => Number(document.querySelector('[role="slider"]')?.getAttribute('aria-valuenow')) === 100);
+  assert.deepEqual(await page.locator('[data-goto-stop]').evaluateAll((buttons) => buttons.map((button) => button.hasAttribute('data-reached'))), [true, true, true, true, true]);
 
   await page.getByRole('button', { name: 'Ir a la parada 3' }).click();
   await page.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.stopId === 'parada-3');

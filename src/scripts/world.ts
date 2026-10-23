@@ -10,7 +10,6 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   let timeline = createTourTimeline(mobileView.matches ? mobileTourSegments : tourSegments);
   const stage = world.querySelector<HTMLElement>('[data-stage]');
   const status = world.querySelector<HTMLElement>('[data-status]');
-  const counter = world.querySelector<HTMLElement>('[data-counter]');
   const debug = world.querySelector<HTMLOutputElement>('[data-debug]');
   const modePicker = world.querySelector<HTMLElement>('[data-mode-picker]');
   const modeSelect = world.querySelector<HTMLSelectElement>('[data-mode-select]');
@@ -24,7 +23,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const characters = [...world.querySelectorAll<HTMLImageElement>('[data-character]')];
   const dialogueElements = [...world.querySelectorAll<HTMLElement>('[data-dialogue]')];
   const particleCanvas = world.querySelector<HTMLCanvasElement>('[data-particles]');
-  if (!stage || !status || !counter || videos.length !== timeline.segments.length || stops.length !== timeline.segments.filter((segment) => segment.stopUnits > 0).length) return;
+  if (!stage || !status || videos.length !== timeline.segments.length || stops.length !== timeline.segments.filter((segment) => segment.stopUnits > 0).length) return;
 
   if (staticMode) {
     world.dataset.motion = 'off';
@@ -268,9 +267,10 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       prepareCharacter(state.activeStopId);
     }
     seek(activeIndex);
-    counter.textContent = String(activeIndex + 1).padStart(2, '0');
     stopButtons.forEach((button) => {
-      if (Number(button.dataset.gotoStop) === activeIndex) button.setAttribute('aria-current', 'step');
+      const stopIndex = Number(button.dataset.gotoStop);
+      button.toggleAttribute('data-reached', progress >= timeline.segments[stopIndex].stopStart / timeline.totalUnits);
+      if (stopIndex === activeIndex) button.setAttribute('aria-current', 'step');
       else button.removeAttribute('aria-current');
     });
     stops.forEach((stop) => {
