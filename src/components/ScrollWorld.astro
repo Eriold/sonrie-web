@@ -217,7 +217,7 @@ const isDev = import.meta.env.DEV;
   .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 2px; transform: translateX(-50%); pointer-events: none; }
   .timeline-line { height: 100%; background: white; }
   .timeline-progress { width: 4px; height: var(--tour-progress); background: var(--rail-visited); }
-  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 2.75rem; height: 3px; background: white; transform: translate(-50%, -50%); pointer-events: none; }
+  .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 2rem; height: 4px; border-radius: 999px; background: white; box-shadow: 0 0 6px rgb(255 255 255 / 45%); transform: translate(-50%, -50%); pointer-events: none; }
   .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; cursor: pointer; touch-action: none; transform: translate(-50%, -50%); }
   .stops button::before { width: .75rem; height: .75rem; border-radius: 50%; background: white; content: ''; }
   .stops button[data-reached]::before { background: var(--rail-visited); }
@@ -238,7 +238,7 @@ const isDev = import.meta.env.DEV;
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
-  @media (max-width: 640px) { .stops { right: .5rem; width: 1.5rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-slider { width: 2.25rem; } .timeline-indicator { width: 2.15rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; width: 1.5rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-slider { width: 2.25rem; } .timeline-indicator { width: 1.5rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }

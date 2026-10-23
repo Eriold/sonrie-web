@@ -149,3 +149,7 @@ La línea pendiente queda marfil y la parte recorrida conserva el verde menta `#
 ## D-035 — Riel sin contornos y menor ancho visual (2026-10-23)
 
 El usuario precisó que la línea y los puntos no requieren negro. Se eliminan los contornos y sombras de ambos: blanco puro para lo pendiente y el mismo verde menta `#79e2c1` para lo recorrido. El ancho del contenedor visual y del indicador horizontal disminuye 12 px tanto en escritorio como en móvil. El slider y los botones conservan sus anchos de interacción anteriores (44 y 36 px) aunque sobresalgan del contenedor invisible, para mantener el arrastre y el toque cómodos.
+
+## D-036 — Indicador de posición más corto (2026-10-23)
+
+El usuario pidió que la línea horizontal que señala la posición fuese más pequeña y cuidada visualmente. Se reduce de 44 a 32 px en escritorio y de aproximadamente 34 a 24 px en móvil, con extremos redondeados y un brillo blanco leve. Conserva el color blanco y su posición exacta en `--tour-progress`; no cambia el área interactiva del riel ni el progreso verde menta.

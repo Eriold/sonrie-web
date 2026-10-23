@@ -222,3 +222,8 @@
 
 - La línea pendiente y los puntos no alcanzados son blancos, sin bordes ni sombras oscuras; lo recorrido conserva el verde menta.
 - El ancho visual de la barra y del indicador horizontal baja aproximadamente 12 px; las áreas de interacción mantienen su tamaño.
+
+## 2026-10-23 — Indicador de posición más compacto
+
+- Se acortó la línea horizontal de posición a 32 px en escritorio y 24 px en móvil, con extremos redondeados y brillo blanco tenue.
+- El riel, su avance verde menta y la navegación permanecen sincronizados con el scroll.
