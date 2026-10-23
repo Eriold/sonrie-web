@@ -165,3 +165,9 @@
 - Se reemplazaron los efectos distintos por parada por un ciclo común de círculos que nacen, brillan suavemente y desaparecen.
 - Se detiene el dibujo fuera de la parada, del viewport o con la página oculta; ahorro de datos y movimiento reducido lo desactivan.
 - En equipos modestos se limita a seis partículas y 20 FPS. Se verificaron pruebas unitarias, Astro Check, build, Chrome y capturas visuales.
+
+## 2026-10-23 — Auditoría inicial de rendimiento móvil y longitud del recorrido
+
+- Se priorizó F9-00 por los reportes de iPhone sin animación fluida y de navegación excesivamente larga en escritorio.
+- La inspección confirmó cinco MP4 AV1 a 1080p con fotogramas clave escasos y un recorrido de 27,5 alturas de pantalla. Falta validar en Safari de un iPhone real antes de elegir e implementar la solución.
+- Solo se actualizó documentación; no se cambiaron videos ni comportamiento de la página.
