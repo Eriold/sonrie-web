@@ -206,3 +206,8 @@
 
 - Se eliminó el fondo, borde y sombra de la columna de navegación.
 - El riel y su progreso conservan un contorno fino para distinguirse sobre videos claros; las marcas 01–05 y el indicador horizontal permanecen.
+
+## 2026-10-23 — Progreso coloreado en la barra
+
+- Se recuperó el relleno verde menta del tramo recorrido, diferenciado de la línea pendiente.
+- El indicador horizontal, las marcas rectangulares y el riel sin panel de fondo se conservan.

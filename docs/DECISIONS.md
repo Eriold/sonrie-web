@@ -137,3 +137,7 @@ Tras aprobar el comportamiento del riel, el usuario pidió retirar los círculos
 ## D-032 — Riel sin fondo continuo (2026-10-23)
 
 El usuario pidió retirar la columna oscura de D-031. El riel conserva solo la línea de progreso, el indicador horizontal y las cinco marcas rectangulares individuales; se eliminan fondo, borde y sombra del contenedor. Un contorno fino oscuro en la línea mantiene contraste sobre los fotogramas claros sin cubrir el video. La geometría y la lógica del control no cambian.
+
+## D-033 — Progreso coloreado sobre el riel abierto (2026-10-23)
+
+El usuario pidió recuperar la lectura de barra que se llena al avanzar. La parte recorrida vuelve a tener un color propio, verde menta `#79e2c1`, y aumenta a 4 px frente a los 2 px de la línea pendiente. El borde oscuro fino conserva contraste sobre escenas claras; el indicador horizontal continúa blanco. Solo cambia la presentación de `--tour-progress`: el cálculo, el arrastre y las marcas 01–05 permanecen.

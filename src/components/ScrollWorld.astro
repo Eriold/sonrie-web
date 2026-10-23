@@ -220,7 +220,7 @@ const isDev = import.meta.env.DEV;
   .timeline-slider:focus-visible { outline: 2px solid #f6f4ee; outline-offset: 3px; border-radius: .2rem; }
   .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 2px; transform: translateX(-50%); pointer-events: none; }
   .timeline-line { height: 100%; background: rgb(246 244 238 / 65%); box-shadow: 0 0 0 1px rgb(14 25 28 / 65%); }
-  .timeline-progress { height: var(--tour-progress); background: #f6f4ee; box-shadow: 0 0 0 1px rgb(14 25 28 / 75%); }
+  .timeline-progress { width: 4px; height: var(--tour-progress); background: #79e2c1; box-shadow: 0 0 0 1px rgb(14 25 28 / 80%); }
   .timeline-indicator { position: absolute; z-index: 1; left: 50%; top: var(--tour-progress); width: 3.5rem; height: 3px; background: #f6f4ee; box-shadow: 0 0 0 1px rgb(14 25 28 / 85%); transform: translate(-50%, -50%); pointer-events: none; }
   .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; background: transparent; color: #f6f4ee; cursor: pointer; touch-action: none; font: 600 .75rem/1 ui-monospace, SFMono-Regular, Consolas, monospace; font-variant-numeric: tabular-nums; letter-spacing: .04em; transform: translate(-50%, -50%); }
   .stops button::before { position: absolute; z-index: -1; inset: .42rem .15rem; border: 1px solid rgb(246 244 238 / 67%); border-radius: .15rem; background: #19282b; content: ''; }
