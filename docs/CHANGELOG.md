@@ -149,3 +149,8 @@
 - Se añadió un workflow para verificar y desplegar el build estático al subir cambios a `main`.
 - El build de Pages usa la ruta `/sonrie-web` y omite el sitemap mientras la página provisional mantenga `noindex`.
 - No se subieron cambios ni se activó Pages desde este workspace.
+
+## 2026-10-23 — Corrección de instalación en GitHub Actions
+
+- Se autorizó en pnpm el script de `@ffprobe-installer/linux-x64`, requerido por la dependencia de desarrollo de ffprobe en el runner Linux.
+- La instalación local con lockfile congelado, el chequeo de Astro y las 11 pruebas pasaron; queda pendiente repetir el workflow remoto.
