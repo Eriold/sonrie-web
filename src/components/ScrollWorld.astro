@@ -64,6 +64,7 @@ const isDev = import.meta.env.DEV;
       />
     ))}
     <div class="shade" aria-hidden="true"></div>
+    <canvas class="particles" data-particles data-active-stop="" aria-hidden="true"></canvas>
     {stopSegments.map(({ segment, segmentIndex }, stopIndex) => (
       <section
         class="stop"
@@ -166,6 +167,7 @@ const isDev = import.meta.env.DEV;
   .stop-image { object-fit: cover; object-position: center; opacity: 0; transition: opacity 180ms ease; pointer-events: none; }
   .stop-image.is-active, .stop-image.is-outgoing { opacity: 1; }
   .shade { z-index: 1; pointer-events: none; background: linear-gradient(90deg, rgb(7 30 34 / 77%), transparent 80%), linear-gradient(0deg, rgb(7 30 34 / 65%), transparent 45%); }
+  .particles { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; pointer-events: none; }
   .stop { position: absolute; z-index: 2; top: clamp(5rem, 12vh, 8rem); left: clamp(1.5rem, 6vw, 6rem); max-width: min(26rem, calc(100% - 6rem)); padding: 1.25rem 1.5rem; border: 1px solid rgb(255 255 255 / 50%); border-radius: 1rem; background: rgb(7 30 34 / 82%); box-shadow: 0 1rem 2rem rgb(0 0 0 / 15%); }
   .stop[hidden] { display: none; }
   .stop-eyebrow { margin: 0 0 .5rem; font-size: .75rem; letter-spacing: .15em; text-transform: uppercase; }
@@ -211,6 +213,7 @@ const isDev = import.meta.env.DEV;
   .world[data-motion='off'] .clip { display: none; }
   .world[data-motion='off'] .stop-image { display: none; }
   .world[data-motion='off'] .character { display: none; }
+  .world[data-motion='off'] .particles { display: none; }
   .world[data-motion='off'] .stops { display: none; }
   .world[data-motion='off'] .static-dialogues { display: grid; gap: 1rem; padding: 1.5rem; background: #173b40; color: white; }
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }

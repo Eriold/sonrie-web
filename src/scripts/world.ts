@@ -2,6 +2,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { resolveStopCharacter, stopCharacters } from '../data/characters';
 import { tourSegments, type StopMediaMode } from '../data/tour';
 import { createTourTimeline, resolveTourPosition } from './timeline';
+import { initParticles } from './particles';
 
 const timeline = createTourTimeline(tourSegments);
 
@@ -19,6 +20,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const photos = [...world.querySelectorAll<HTMLImageElement>('[data-photo]')];
   const characters = [...world.querySelectorAll<HTMLImageElement>('[data-character]')];
   const dialogueElements = [...world.querySelectorAll<HTMLElement>('[data-dialogue]')];
+  const particleCanvas = world.querySelector<HTMLCanvasElement>('[data-particles]');
   if (!stage || !status || !counter || videos.length !== timeline.segments.length || stops.length !== timeline.segments.filter((segment) => segment.stopUnits > 0).length) return;
 
   if (staticMode) {
@@ -27,6 +29,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     if (debug) debug.textContent = 'Movimiento desactivado';
     return;
   }
+
+  const particles = particleCanvas ? initParticles(particleCanvas) : null;
 
   let activeIndex = 0;
   let shownIndex = -1;
@@ -247,6 +251,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       prepareImage(posters.find((image) => image.dataset.index === String(index)));
     }
     const characterAssignment = stopCharacters.find((entry) => entry.stopId === state.activeStopId);
+    particles?.setStop(state.phase === 'stop' && characterAssignment
+      && state.stopProgress >= characterAssignment.revealAfterProgress ? state.activeStopId : null);
     if (state.phase === 'stop' && characterAssignment && state.stopProgress >= characterAssignment.revealAfterProgress / 2) {
       prepareCharacter(state.activeStopId);
     }

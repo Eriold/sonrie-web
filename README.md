@@ -30,6 +30,8 @@ Para repetir la auditoría de F4-03 con Preview activo, ejecuta `pnpm.cmd exec n
 
 Los diálogos de demostración están en `src/data/dialogues.ts`. Con Preview activo, `pnpm.cmd exec node tests/dialogue-browser.mjs` comprueba páginas, teclado, tacto, regreso y movimiento reducido. Cada acción externa requiere una persona real identificada y un enlace confirmado; los personajes actuales son prototipos y no muestran botones de redes ni acreditación. La consulta pública ReTHUS se documenta en `docs/DECISIONS.md`.
 
+Los efectos ambientales se configuran por parada en `src/data/particles.ts`. Con Preview activo, `pnpm.cmd exec node tests/particles-browser.mjs` verifica su aparición tras la foto, las paradas desactivadas, el orden de capas y movimiento reducido. F6-02 ampliará las medidas de rendimiento.
+
 ## Organización
 
 - `assets/`: medios originales; conservar sin sobrescribir.
@@ -39,6 +41,12 @@ Los diálogos de demostración están en `src/data/dialogues.ts`. Con Preview ac
 - `docs/PROGRESS.md`: tareas, estado y verificaciones.
 - `docs/DECISIONS.md` y `docs/MEDIA.md`: decisiones técnicas e inventario audiovisual.
 
-`node_modules/`, `dist/`, `.astro/`, `.pnpm-store/` y archivos `.env` se excluyen de Git. El sitemap se activa cuando se configure `PUBLIC_SITE_URL` con un dominio confirmado; consulta `.env.example`.
+`node_modules/`, `dist/`, `.astro/`, `.pnpm-store/` y archivos `.env` se excluyen de Git. El sitemap se activa cuando se configure `PUBLIC_SITE_URL` con un dominio confirmado; `PUBLIC_SITEMAP=false` lo desactiva durante la publicación del prototipo. Consulta `.env.example`.
 
-No hay despliegue ni contenido comercial validado todavía.
+## Despliegue provisional en GitHub Pages
+
+El workflow `.github/workflows/deploy-pages.yml` ejecuta `pnpm install --frozen-lockfile`, `pnpm check`, `pnpm test` y `pnpm build` cuando se suben cambios a `main`. Si pasan, publica `dist/` en GitHub Pages. También se puede iniciar manualmente desde Actions. La URL prevista es `https://eriold.github.io/sonrie-web/`; el build usa `/sonrie-web` como ruta base para videos, fotos, estilos y scripts.
+
+Para activar el primer despliegue, en el repositorio de GitHub selecciona **Settings → Pages → Build and deployment → Source → GitHub Actions** y sube este workflow a `main`. No se requieren secretos para GitHub Pages. La página actual es un prototipo público con personajes de muestra, textos sin validar y `noindex`; el workflow no genera sitemap. Antes de publicar el sitio comercial se deben completar las fases de contenido, validación y SEO. Si se asigna un dominio propio, actualiza `PUBLIC_SITE_URL` y elimina `PUBLIC_BASE_PATH` del workflow, además de configurar el dominio en Pages.
+
+Todavía no se ha ejecutado ningún despliegue desde este repositorio de trabajo.

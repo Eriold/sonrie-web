@@ -136,3 +136,16 @@
 - Cada parada muestra un diálogo de dos páginas después de apreciar la fotografía; los botones funcionan con mouse, teclado y tacto, y el scroll no cambia la página.
 - El texto sigue disponible al regresar a una parada, si falla el avatar y en modo de movimiento reducido.
 - Se prepararon enlaces opcionales de redes y consulta ReTHUS con filtros de confirmación y dominio oficial; los prototipos no publican ninguno.
+
+## 2026-10-23 — F6-01, partículas opcionales
+
+- Se registró F5-03 en el commit local `b884144`, sin push ni las cuatro eliminaciones antiguas de `assets/`.
+- Se añadieron configuraciones tipadas de polvo, destellos y brillos suaves para las cinco paradas; la segunda queda desactivada.
+- Un canvas decorativo aparece después del tramo inicial de fotografía y no intercepta controles. Se oculta con movimiento reducido.
+- Se verificaron los efectos en Chrome y se inspeccionaron capturas temporales de recepción y sala clínica.
+
+## 2026-10-23 — Configuración provisional de GitHub Pages
+
+- Se añadió un workflow para verificar y desplegar el build estático al subir cambios a `main`.
+- El build de Pages usa la ruta `/sonrie-web` y omite el sitemap mientras la página provisional mantenga `noindex`.
+- No se subieron cambios ni se activó Pages desde este workspace.
