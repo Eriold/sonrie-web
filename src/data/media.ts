@@ -7,9 +7,11 @@ import foto1 from '../../assets/Parte_1.webp?url';
 import foto2 from '../../assets/Parte_2.webp?url';
 import foto3 from '../../assets/Parte_3.webp?url';
 import foto5 from '../../assets/Parte_5.webp?url';
+import foto6 from '../../assets/Parte_6.webp?url';
 import poster1 from '../media/posters/Parte_1-poster.webp?url';
 import poster2 from '../media/posters/Parte_2-poster.webp?url';
 import poster3 from '../media/posters/Parte_3-poster.webp?url';
+import poster4 from '../media/posters/Parte_4-poster.webp?url';
 import poster5 from '../media/posters/Parte_5-poster.webp?url';
 
 export const videoUrls: Readonly<Record<string, string>> = {
@@ -25,11 +27,13 @@ export const photoUrls: Readonly<Record<string, string>> = {
   'Parte_2.webp': foto2,
   'Parte_3.webp': foto3,
   'Parte_5.webp': foto5,
+  'Parte_6.webp': foto6,
 };
 
 export const posterUrls: Readonly<Record<string, string>> = {
   'Parte_1.mp4': poster1,
   'Parte_2.mp4': poster2,
   'Parte_3.mp4': poster3,
+  'Parte_4.mp4': poster4,
   'Parte_5.mp4': poster5,
 };

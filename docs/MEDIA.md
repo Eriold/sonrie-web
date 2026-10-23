@@ -37,8 +37,9 @@ Todos son 1920×1080 a 24 FPS. `color_space`, `color_transfer` y `color_primarie
 | `Parte_3.webp` | 679.966 | 4000×2252 | WebP/RGB | Pendiente de comparar |
 | `Parte_4.jpg` | 502.319 | 4000×2252 | JPEG/RGB | Pendiente de comparar |
 | `Parte_5.webp` | 943.640 | 4000×2252 | WebP/RGB | Antes `Parte_4.webp`; portada del video 5 |
+| `Parte_6.webp` | 442.708 | 4000×2252 | WebP/RGB | Foto final, posterior a `Parte_5.mp4`; añadida por el usuario |
 
-No existe imagen `Parte_5` en `assets/`. Los canales RGBA de las imágenes 2 no prueban que tengan píxeles transparentes visibles; debe verificarse antes de usarlas como fondos. Ninguna foto está validada como último frame del clip homónimo.
+En el inventario inicial no existía imagen `Parte_5` en `assets/`; la corrección vigente del usuario renombró `Parte_4.webp` a `Parte_5.webp`. La transparencia efectiva de las imágenes 2 se comprobó en F4-01. La comparación relevante para las fotos activas es con el **primer** frame del video que abren, no con el último.
 
 **Estado observado al iniciar F3-02 (2026-10-22):** `Parte_1.jpg`, `Parte_2_old.png`, `Parte_3.jpg` y `Parte_4.jpg` figuran eliminados en el árbol de trabajo de Git; no se restauran ni se incorporan a esta tarea. Permanecen `Parte_1.webp` a `Parte_4.webp` y `Parte_2.png`. La relación por nombre indicada por el usuario se toma como candidata para las cuatro primeras paradas, pendiente de comparar encuadres. `Parte_2.webp` mide 1921×1076, prácticamente la resolución del video 1920×1080; el PNG homónimo sí mide 3999×2240, pero pesa 9,5 MB. La quinta parada sigue sin foto homónima. Estos datos sustituyen el inventario inicial solo para las rutas disponibles en F3-02; los registros anteriores conservan su valor histórico.
 
@@ -59,6 +60,26 @@ F3-02 generó pósters WebP desde el último fotograma de `Parte_1.mp4` a `Parte
 
 **Corrección vigente:** `Parte_4.mp4` sí se reproduce, inmediatamente después de `Parte_3.mp4`, sin foto ni parada previa. Por solicitud del usuario, `Parte_4.webp` se renombró a `Parte_5.webp`, sin alterar los bytes de imagen; aparece antes de `Parte_5.mp4`. Hay cinco videos y cuatro fotos activas. El párrafo anterior conserva el registro de la interpretación equivocada, sustituida por esta corrección.
 
+## F4-01 — Continuidad y espacios observados (2026-10-22)
+
+Se extrajeron fotogramas 0, 25 %, 50 %, 75 % y final de cada MP4 con OpenCV/Pillow, sin alterar los originales. Las láminas [Parte 1](media-review/Parte_1-contacto.jpg), [Parte 2](media-review/Parte_2-contacto.jpg), [Parte 3](media-review/Parte_3-contacto.jpg), [Parte 4](media-review/Parte_4-contacto.jpg) y [Parte 5](media-review/Parte_5-contacto.jpg) muestran esos cinco puntos junto a la portada activa al momento de F4-01, cuando existía. La [comparación del cierre](media-review/Parte_5-cierre.jpg) añade `Parte_6.webp` junto al último frame del video 5. Las descripciones siguientes identifican rasgos visibles, no números de consultorio ni servicios autorizados.
+
+| Clip | Recorrido visible dentro del clip | Portada anterior → primer frame | Salida → visual siguiente |
+| --- | --- | --- | --- |
+| `Parte_1.mp4` | Recepción: sofá y letrero, mostrador, TV y ventanal. La cámara gira hacia el mostrador. | `Parte_1.webp`: misma recepción y encuadre muy cercano; cambia la imagen de la TV y hay leve variación de perspectiva. | `Parte_2.webp`: sigue en recepción, pero encuadra el mostrador más de frente; hay corte de cámara perceptible. |
+| `Parte_2.mp4` | Parte del mostrador de recepción, cruza la zona del letrero en vidrio y entra en una sala con sillón odontológico y reloj de pared. | `Parte_2.webp`: mismo mostrador y ventanal; encuadre muy cercano al primer frame, con pequeñas variaciones de luz y perspectiva. | `Parte_3.webp`: misma sala con sillón y reloj, desde un punto de vista desplazado; no es el mismo fotograma. |
+| `Parte_3.mp4` | Sale de la sala con sillón y reloj hacia el pasillo de divisiones blancas. | `Parte_3.webp`: misma sala y elementos, pero encuadre más abierto y desplazado respecto del primer frame. | `Parte_4.mp4` empieza en el mismo pasillo y con orientación similar; unión cercana, sin foto intermedia. |
+| `Parte_4.mp4` | Avanza por ese pasillo y entra en una sala con sillón y un cuadro de colibrí. | No tiene portada fotográfica. El primer frame continúa de cerca el final de `Parte_3.mp4`. | `Parte_5.webp`: misma sala del colibrí, pero desde un ángulo más frontal y abierto; hay salto de perspectiva. |
+| `Parte_5.mp4` | Parte de la sala del colibrí, vuelve al pasillo y termina en otra sala con sillón y panel azul de Sonríe. | `Parte_5.webp`: misma sala del colibrí y equipamiento, con variación moderada de encuadre frente al primer frame. | `Parte_6.webp`: misma sala final, sillón y panel azul; foto más amplia y frontal que el último frame. |
+
+**Asignación provisional de las cinco paradas:** `parada-1` y `parada-2` muestran la recepción desde ángulos distintos; `parada-3` muestra la sala del sillón y reloj; `parada-5` muestra la sala del colibrí después del video 4 y antes del 5; `parada-6` muestra la sala final con panel azul después del video 5. La numeración conserva los nombres de recursos y salta el pasillo de Parte 4, sin foto propia. No hay tomas que permitan afirmar un recorrido por fachada o entrada exterior, ni evidencia suficiente para numerar consultorios o asignarles funciones. Estas descripciones no se publican como contenido comercial definitivo.
+
+**Transiciones:** las cuatro portadas de entrada se parecen al primer frame de su clip y la foto final se parece al último frame del video 5, pero ninguna es idéntica píxel a píxel. Conviene conservar el fundido y la capa anterior de F3-03; no usar un corte que prometa continuidad exacta. La unión sin portada entre videos 3 y 4 es la más cercana. La continuidad espacial general queda sustentada por elementos repetidos, mientras los cambios de punto de vista indicados en la tabla son visibles. La corrección posterior del usuario añade la foto final y queda registrada en D-019.
+
+**Corrección de secuencia posterior a F4-01:** `Parte_6.webp` llegó a `assets/` y coincide espacialmente con el último fotograma de `Parte_5.mp4`: mismo panel azul, sillón y mobiliario, con una perspectiva más amplia y leve diferencia de iluminación. Mide 4000×2252 px, pesa 442.708 bytes y es RGB sin alfa. El recorrido vigente es foto 1→video 1→foto 2→video 2→foto 3→video 3→video 4→foto 5→video 5→foto 6. La foto 5 se modela como parada **después** del video 4 para que el quinto video pueda terminar en otra parada **después** de sí mismo; sigue siendo la foto previa al video 5. El video 4 no tiene foto antes de comenzar. Se extrajeron pósters del **último** frame de los videos 4 y 5: 1920×1080, 72.572 y 64.806 bytes. Los pósters 1–3 continúan basados en el primer frame. No se alteraron los MP4 ni los WebP originales.
+
+**Transparencia de Parte 2:** Pillow confirmó píxeles transparentes en `Parte_2.png` (0,70 % totalmente transparentes; 0,42 % parciales) y `Parte_2.webp` (0,87 % totalmente transparentes). La foto WebP puede dejar ver el fondo en bordes; revisar la composición en F4-02/F7-03. El PNG de 9,5 MB muestra el mismo mostrador como alternativa de mayor resolución, pero no se cambia la portada activa sin evaluar peso y encuadre.
+
 ## Personajes
 
 | Archivo | Bytes | Dimensiones | Transparencia técnica | Rol confirmado |
@@ -72,8 +93,8 @@ Estos son los nombres completos reales. La asignación a roles, identidad y espa
 
 ## Pendientes audiovisuales
 
-- [ ] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad.
-- [ ] Determinar si la parada final requiere foto, último fotograma congelado o póster generado.
+- [x] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad. F4-01: tabla y cinco láminas anteriores.
+- [x] Determinar si la parada final requiere foto, último fotograma congelado o póster generado. La corrección vigente del usuario usa `Parte_6.webp` después del video 5, con su último frame y póster como respaldos.
 - [x] Confirmar presencia de pistas, códec, keyframes, color y `faststart` con `ffprobe`.
 - [ ] Probar seek y scrubbing en navegadores; confirmar si las pistas AAC tienen contenido audible; recodificar solo si las pruebas lo exigen.
 - [ ] Inspeccionar transparencia efectiva y contenido de cada PNG, y asignar rol sin atribuir nombre ni credenciales.

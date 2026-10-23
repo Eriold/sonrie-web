@@ -8,17 +8,18 @@ const sample = [
   { id: 'b', clipAsset: 'b.mp4', durationSeconds: 6, videoUnits: 3, stopUnits: 1, stopId: 'stop-b', stopMediaMode: 'video-freeze', stopPhotoAsset: null },
 ];
 
-test('la configuración conserva cinco videos y omite solo la foto del cuarto', () => {
+test('la configuración conserva cinco videos y añade la portada final', () => {
   assert.deepEqual(tourSegments.map((segment) => segment.clipAsset), [
     'Parte_1.mp4', 'Parte_2.mp4', 'Parte_3.mp4', 'Parte_4.mp4', 'Parte_5.mp4',
   ]);
-  assert.equal(new Set(tourSegments.map((segment) => segment.stopId).filter(Boolean)).size, 4);
+  assert.equal(new Set(tourSegments.map((segment) => segment.stopId).filter(Boolean)).size, 5);
   assert.deepEqual(tourSegments.map((segment) => segment.stopPhotoAsset), [
-    'Parte_1.webp', 'Parte_2.webp', 'Parte_3.webp', null, 'Parte_5.webp',
+    'Parte_1.webp', 'Parte_2.webp', 'Parte_3.webp', 'Parte_5.webp', 'Parte_6.webp',
   ]);
   assert.deepEqual(tourSegments.map((segment) => segment.stopMediaMode), [
-    'high-res-image', 'high-res-image', 'high-res-image', 'video-freeze', 'high-res-image',
+    'high-res-image', 'high-res-image', 'high-res-image', 'high-res-image', 'high-res-image',
   ]);
+  assert.deepEqual(tourSegments.map((segment) => segment.stopPlacement), ['before', 'before', 'before', 'after', 'after']);
 });
 
 test('resuelve video, parada y fronteras con el segmento correcto', () => {
@@ -60,18 +61,17 @@ test('limita posiciones fuera de rango y mantiene el resultado al retroceder o s
 });
 
 test('cada intervalo de parada mantiene su duración configurable y se recupera al volver', () => {
-  const configured = tourSegments.map((segment, index) => ({ ...segment, stopUnits: segment.stopPlacement === 'none' ? 0 : index + 1 }));
+  const configured = tourSegments.map((segment, index) => ({ ...segment, stopUnits: index + 1 }));
   const timeline = createTourTimeline(configured);
   assert.equal(timeline.segments.length, 5);
   for (const [index, segment] of timeline.segments.entries()) {
-    if (segment.stopPlacement === 'none') continue;
     if (segment.stopPlacement === 'before') assert.equal(segment.videoStart - segment.stopStart, index + 1);
     else assert.equal(segment.end - segment.stopStart, index + 1);
     const midpoint = segment.stopStart + (index + 1) / 2;
     const firstVisit = resolveTourPosition(timeline, midpoint);
     assert.equal(firstVisit.phase, 'stop');
     assert.equal(firstVisit.stopProgress, 0.5);
-    assert.equal(firstVisit.activeStopId, `parada-${index + 1}`);
+    assert.equal(firstVisit.activeStopId, index < 3 ? `parada-${index + 1}` : `parada-${index + 2}`);
     resolveTourPosition(timeline, timeline.totalUnits);
     assert.deepEqual(resolveTourPosition(timeline, midpoint), firstVisit);
   }

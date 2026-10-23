@@ -73,3 +73,11 @@ El usuario aclaró que D-015 interpretó mal el cuarto tramo: `Parte_4.mp4` sí 
 ## D-017 — Conservar la capa saliente durante la carga (2026-10-22)
 
 F3-03 prepara fotos y pósters con `HTMLImageElement.decode()` y carga el video activo y los segmentos vecinos. Solo activa el nuevo video cuando el fotograma pedido está disponible; hasta entonces conserva la capa anterior. Un cambio de capa mantiene brevemente la saliente bajo la entrante para evitar fondos vacíos durante el fundido. Si falla una foto de parada se presenta su póster; si tampoco está disponible, se mantiene el video decodificado o la última capa visible. La prueba de Chrome retrasó el cuarto video y bloqueó la foto 5 para verificar los respaldos.
+
+## D-018 — Nombres de espacios basados en rasgos visibles (2026-10-22)
+
+F4-01 confirmó que varios clips cruzan más de un espacio: los videos 2, 3, 4 y 5 no se pueden etiquetar como un consultorio único. La documentación describe recepción, pasillo y salas por objetos distintivos (reloj, cuadro de colibrí, panel azul). No se asignan números de consultorio, especialidades ni una toma de fachada inexistente en los cinco MP4. Se conserva la secuencia actual de `tour.ts`, pues cada foto corresponde espacialmente al inicio del video que abre; las diferencias de perspectiva se detallan en `docs/MEDIA.md`.
+
+## D-019 — Foto final Parte 6 sin sexto video (2026-10-22)
+
+El usuario añadió `Parte_6.webp` y pidió mostrarla al terminar `Parte_5.mp4`. La comparación con el último frame confirmó la sala del panel azul y su mobiliario, con perspectiva más abierta. El motor ya admite paradas después de un video: `Parte_4.mp4` lleva una parada posterior con `Parte_5.webp` (la portada del video 5) y `Parte_5.mp4` lleva la parada final con `Parte_6.webp`. Así el video 4 no tiene foto inicial y se conservan cinco clips. Se regeneró el póster de Parte 5 desde su último frame y se añadió el de Parte 4, también desde el último frame, como respaldos. Esta decisión sustituye la ausencia de foto final indicada en D-014 a D-018; las entradas anteriores permanecen como historial.

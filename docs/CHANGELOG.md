@@ -87,3 +87,18 @@
 - El fondo anterior sigue visible hasta que el siguiente fotograma o imagen está disponible; el fundido conserva una capa saliente.
 - Una foto fallida utiliza su póster como respaldo. Chrome verificó video 3→4 retrasado, regreso sin fondo vacío y fallo de la foto 5.
 - Pasaron `pnpm.cmd test` (6/6), `pnpm.cmd check` (0 diagnósticos), `pnpm.cmd build` (1 página) y `pnpm.cmd test:browser`.
+
+## 2026-10-22 — F4-01, revisión de escenas y continuidad
+
+- Se registró la fase 3 verificada en el commit local `e8b4356`, sin push ni inclusión de las eliminaciones anteriores de `assets/`.
+- Se guardaron cinco láminas comparativas de videos y portadas en `docs/media-review/`.
+- `docs/MEDIA.md` documenta los espacios observables, los cortes de perspectiva, la ausencia de fachada en estos clips y la transparencia de la imagen de Parte 2.
+- Se mantuvo el orden audiovisual. Pasaron `pnpm.cmd test` (6/6), `pnpm.cmd check` (0 diagnósticos) y `pnpm.cmd build` (1 página).
+
+## 2026-10-22 — Foto final Parte 6
+
+- Se añadió `Parte_6.webp` como fondo de la parada posterior a `Parte_5.mp4`; los cinco videos mantienen su orden.
+- La foto 5 pasa a ser la parada posterior al video 4, por lo que sigue apareciendo antes del video 5 sin poner foto al inicio del pasillo.
+- Se generaron pósters desde los últimos frames de los videos 4 y 5, sin tocar los originales.
+- Se comparó la foto 6 con el final del video 5 y se amplió la prueba de navegador para el cierre, sus modos de fondo y el fallo de la imagen.
+- Pasaron `pnpm.cmd test` (6/6), `pnpm.cmd check` (0 diagnósticos), `pnpm.cmd build` (5 videos, 5 fotos y 5 pósters en una página) y `pnpm.cmd test:browser` (sin errores de página).
