@@ -125,12 +125,24 @@ const isDev = import.meta.env.DEV;
       <a href="#despues-del-recorrido">Saltar el recorrido</a>
     </div>
     <div class="counter" aria-hidden="true"><span data-counter>01</span> / {String(timeline.segments.length).padStart(2, '0')}</div>
-    <nav class="stops" aria-label="Ir a una parada del recorrido">
-      {stopSegments.map(({ segmentIndex }, stopIndex) => (
-        <button type="button" data-goto-stop={segmentIndex} aria-label={`Ir a la parada ${stopIndex + 1}`}>
-          {String(stopIndex + 1).padStart(2, '0')}
-        </button>
-      ))}
+    <nav class="stops" aria-label="Navegar por el recorrido">
+      <div class="timeline-rail" data-timeline-rail>
+        <div class="timeline-slider" data-timeline-slider role="slider" tabindex="0" aria-label="Posición del recorrido" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Inicio del recorrido">
+          <span class="timeline-line" aria-hidden="true"></span>
+          <span class="timeline-progress" aria-hidden="true"></span>
+        </div>
+        {stopSegments.map(({ segmentIndex }, stopIndex) => (
+          <button
+            type="button"
+            data-goto-stop={segmentIndex}
+            style={`--stop-desktop-position: ${100 * timeline.segments[segmentIndex].stopStart / timeline.totalUnits}%; --stop-mobile-position: ${100 * mobileTimeline.segments[segmentIndex].stopStart / mobileTimeline.totalUnits}%`}
+            aria-label={`Ir a la parada ${stopIndex + 1}`}
+          >
+            {String(stopIndex + 1).padStart(2, '0')}
+          </button>
+        ))}
+        <span class="timeline-indicator" aria-hidden="true"></span>
+      </div>
     </nav>
     {isDev && (
       <label class="mode-picker" data-mode-picker hidden>
@@ -202,8 +214,15 @@ const isDev = import.meta.env.DEV;
   a { display: inline-block; padding: .75rem 1rem; border: 1px solid currentColor; border-radius: 999px; text-underline-offset: .2em; }
   a:focus-visible { outline: 3px solid white; outline-offset: 4px; }
   .counter { position: absolute; z-index: 2; right: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); font-variant-numeric: tabular-nums; }
-  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; display: flex; flex-direction: column; gap: .5rem; transform: translateY(-50%); }
-  .stops button { width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / 75%); border-radius: 50%; background: rgb(7 30 34 / 65%); color: white; cursor: pointer; font-size: .8rem; font-variant-numeric: tabular-nums; }
+  .stops { position: absolute; z-index: 3; right: clamp(1rem, 3vw, 3rem); top: 50%; width: 2.75rem; height: min(68svh, 35rem); min-height: 18rem; padding-block: 1.375rem; box-sizing: border-box; transform: translateY(-50%); }
+  .timeline-rail { position: relative; width: 100%; height: 100%; --tour-progress: 0%; }
+  .timeline-slider { position: absolute; inset: 0; z-index: 1; cursor: ns-resize; touch-action: none; }
+  .timeline-slider:focus-visible { outline: 2px solid white; outline-offset: 3px; border-radius: 999px; }
+  .timeline-line, .timeline-progress { position: absolute; left: 50%; top: 0; width: 3px; transform: translateX(-50%); border-radius: 999px; pointer-events: none; }
+  .timeline-line { height: 100%; background: rgb(255 255 255 / 55%); }
+  .timeline-progress { height: var(--tour-progress); background: #a8f5da; box-shadow: 0 0 10px rgb(168 245 218 / 65%); }
+  .timeline-indicator { position: absolute; z-index: 3; left: -.65rem; top: var(--tour-progress); width: .65rem; height: .65rem; border: 2px solid #a8f5da; border-radius: 50%; background: #173b40; box-shadow: 0 0 8px rgb(168 245 218 / 85%); transform: translateY(-50%); pointer-events: none; }
+  .stops button { position: absolute; z-index: 2; left: 50%; top: var(--stop-desktop-position); width: 2.75rem; height: 2.75rem; border: 1px solid rgb(255 255 255 / 75%); border-radius: 50%; background: rgb(7 30 34 / 85%); color: white; cursor: pointer; touch-action: none; font-size: .8rem; font-variant-numeric: tabular-nums; transform: translate(-50%, -50%); }
   .stops button[aria-current='step'] { background: white; color: #173b40; }
   .stops button:focus-visible { outline: 3px solid white; outline-offset: 3px; }
   .debug { position: absolute; z-index: 3; left: 1rem; top: 1rem; max-width: calc(100% - 2rem); padding: .4rem .6rem; background: rgb(7 30 34 / 82%); color: white; font: .75rem/1.4 monospace; }
@@ -222,7 +241,8 @@ const isDev = import.meta.env.DEV;
   .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
-  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px) { .stops { right: .5rem; width: 2.25rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
+  @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }
 </style>

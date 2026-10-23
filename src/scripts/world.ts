@@ -14,6 +14,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const debug = world.querySelector<HTMLOutputElement>('[data-debug]');
   const modePicker = world.querySelector<HTMLElement>('[data-mode-picker]');
   const modeSelect = world.querySelector<HTMLSelectElement>('[data-mode-select]');
+  const timelineRail = world.querySelector<HTMLElement>('[data-timeline-rail]');
+  const timelineSlider = world.querySelector<HTMLElement>('[data-timeline-slider]');
   const stopButtons = [...world.querySelectorAll<HTMLButtonElement>('[data-goto-stop]')];
   const stops = [...world.querySelectorAll<HTMLElement>('[data-stop]')];
   const videos = [...world.querySelectorAll<HTMLVideoElement>('[data-clip]')];
@@ -240,6 +242,9 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const render = (progress: number): void => {
     lastProgress = progress;
     const state = resolveTourPosition(timeline, progress * timeline.totalUnits);
+    timelineRail?.style.setProperty('--tour-progress', `${(progress * 100).toFixed(2)}%`);
+    timelineSlider?.setAttribute('aria-valuenow', String(Math.round(progress * 100)));
+    timelineSlider?.setAttribute('aria-valuetext', `Tramo ${state.segmentIndex + 1} de ${timeline.segments.length}, ${Math.round(progress * 100)} % del recorrido`);
     if (activeIndex !== state.segmentIndex) shownIndex = -1;
     activeIndex = state.segmentIndex;
     currentPhase = state.phase;
@@ -326,15 +331,70 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   };
   mobileView.addEventListener('change', refreshMedia);
   portraitView.addEventListener('change', refreshMedia);
+  const navigateToProgress = (progress: number): void => {
+    const bounded = Math.max(0, Math.min(1, progress));
+    const position = trigger.start + bounded * (trigger.end - trigger.start);
+    if (scrollTo) scrollTo(position);
+    else window.scrollTo({ top: position, behavior: 'instant' });
+    render(bounded);
+  };
+  const progressFromPointer = (clientY: number): number => {
+    const bounds = timelineSlider?.getBoundingClientRect();
+    return bounds && bounds.height > 0 ? (clientY - bounds.top) / bounds.height : lastProgress;
+  };
+  timelineSlider?.addEventListener('pointerdown', (event) => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    timelineSlider.setPointerCapture(event.pointerId);
+    navigateToProgress(progressFromPointer(event.clientY));
+  });
+  timelineSlider?.addEventListener('pointermove', (event) => {
+    if (timelineSlider.hasPointerCapture(event.pointerId)) navigateToProgress(progressFromPointer(event.clientY));
+  });
+  timelineSlider?.addEventListener('pointerup', (event) => {
+    if (timelineSlider.hasPointerCapture(event.pointerId)) timelineSlider.releasePointerCapture(event.pointerId);
+  });
+  timelineSlider?.addEventListener('keydown', (event) => {
+    const delta: Record<string, number> = { ArrowDown: 0.01, ArrowRight: 0.01, ArrowUp: -0.01, ArrowLeft: -0.01, PageDown: 0.1, PageUp: -0.1 };
+    const next = event.key === 'Home' ? 0 : event.key === 'End' ? 1 : event.key in delta ? lastProgress + delta[event.key] : null;
+    if (next === null) return;
+    event.preventDefault();
+    navigateToProgress(next);
+  });
   stopButtons.forEach((button) => {
-    button.addEventListener('click', () => {
+    let startY = 0;
+    let dragging = false;
+    let suppressClick = false;
+    button.addEventListener('pointerdown', (event) => {
+      if (event.button !== 0) return;
+      startY = event.clientY;
+      dragging = false;
+      suppressClick = false;
+      button.setPointerCapture(event.pointerId);
+    });
+    button.addEventListener('pointermove', (event) => {
+      if (!button.hasPointerCapture(event.pointerId)) return;
+      if (Math.abs(event.clientY - startY) > 8) dragging = true;
+      if (dragging) {
+        event.preventDefault();
+        navigateToProgress(progressFromPointer(event.clientY));
+      }
+    });
+    button.addEventListener('pointerup', (event) => {
+      if (button.hasPointerCapture(event.pointerId)) button.releasePointerCapture(event.pointerId);
+      suppressClick = dragging;
+    });
+    button.addEventListener('pointercancel', () => { dragging = false; });
+    button.addEventListener('click', (event) => {
+      if (suppressClick) {
+        event.preventDefault();
+        suppressClick = false;
+        return;
+      }
       const index = Number(button.dataset.gotoStop);
       const segment = timeline.segments[index];
       const unit = segment.stopStart + Math.min(0.02, segment.stopUnits / 10);
-      const position = trigger.start + (unit / timeline.totalUnits) * (trigger.end - trigger.start);
-      if (scrollTo) scrollTo(position);
-      else window.scrollTo({ top: position, behavior: 'instant' });
-      render(unit / timeline.totalUnits);
+      navigateToProgress(unit / timeline.totalUnits);
     });
   });
   render(trigger.progress);
