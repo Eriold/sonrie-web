@@ -1,4 +1,5 @@
 allowBuilds:
+  '@ffmpeg-installer/linux-x64': true
   '@ffprobe-installer/linux-x64': true
   sharp: true
 storeDir: .pnpm-store

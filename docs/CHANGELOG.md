@@ -177,3 +177,8 @@
 - Se añadieron derivados H.264 verticales de 480×1040 y horizontales de 1280×720, sin audio y con keyframes cada 0,5 s; los originales AV1 de escritorio no cambiaron.
 - En móvil, el scroll asignado a video bajó de 4 a 2,5 alturas por tramo; la duración de lectura de las cinco paradas sigue en 1,5 alturas.
 - El navegador elige el video según tamaño/tacto y orientación y actualiza la fuente al girar. Chrome local comprobó avance y regreso de los cinco tramos, giro y ausencia de solicitudes AV1 en vertical. Falta prueba en los teléfonos físicos reportados.
+
+## 2026-10-23 — Instalación de FFmpeg en GitHub Actions
+
+- La primera ejecución tras el push falló al instalar: pnpm bloqueó el script de `@ffmpeg-installer/linux-x64@4.1.0`.
+- Se autorizó ese binario de desarrollo en `pnpm-workspace.yaml`; queda por verificar el nuevo workflow remoto.
