@@ -129,6 +129,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     video.muted = true;
     video.pause();
     video.preload = 'auto';
+    video.src = video.dataset.src ?? '';
     video.load();
   };
 
@@ -159,8 +160,8 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     targetTimes[activeIndex] = state.videoTimeSeconds;
     video.pause();
     load(activeIndex);
-    if (activeIndex > 0) load(activeIndex - 1);
-    if (activeIndex + 1 < videos.length) load(activeIndex + 1);
+    if (activeIndex > 0 && state.videoProgress < 0.5) load(activeIndex - 1);
+    if (activeIndex + 1 < videos.length && state.videoProgress > 0.5) load(activeIndex + 1);
     for (const index of [activeIndex - 1, activeIndex, activeIndex + 1]) {
       if (index < 0 || index >= videos.length) continue;
       prepareImage(photos.find((image) => image.dataset.index === String(index)));

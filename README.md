@@ -26,6 +26,8 @@ Para probar el recorrido en Chrome local, inicia `pnpm dev` y ejecuta `pnpm test
 
 Para comprobar los medios publicados por el build estático, ejecuta `pnpm build`, inicia `pnpm preview --host 127.0.0.1 --port 4321` y en otra terminal ejecuta `pnpm test:production`. La prueba compara por SHA-256 los cinco MP4, las cinco fotos WebP y los cinco pósters servidos con sus archivos fuente; también recorre los cinco videos y comprueba el respaldo al fallar uno. En PowerShell usa `pnpm.cmd` para cada comando. Si usas otra dirección para la vista previa, configura `SONRIE_PREVIEW_URL`.
 
+Para repetir la auditoría de F4-03 con Preview activo, ejecuta `pnpm.cmd exec node scripts/audit-video-performance.mjs` y `pnpm.cmd exec node scripts/audit-video-audio.mjs`. La primera admite `SONRIE_AUDIT_SLOW=1` para simular 4 Mb/s y 150 ms; las cifras dependen del equipo y no representan todos los navegadores. Los MP4 se asignan al elemento de video cuando se necesitan, y el siguiente se carga al superar la mitad del tramo.
+
 ## Organización
 
 - `assets/`: medios originales; conservar sin sobrescribir.

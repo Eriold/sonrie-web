@@ -84,6 +84,14 @@ Se extrajeron fotogramas 0, 25 %, 50 %, 75 % y final de cada MP4 con OpenCV/Pill
 
 Con `pnpm.cmd build` y `pnpm.cmd preview --host 127.0.0.1 --port 4321`, `pnpm.cmd test:production` obtuvo HTTP 200 y MIME `video/mp4` o `image/webp` según el caso. Los SHA-256 de las respuestas fueron idénticos a los de los cinco videos y cinco fotos originales y a los cinco pósters de `src/media/posters/`. Chrome verificó avance controlado por scroll en los cinco videos, todos pausados, la foto final y ausencia de errores de página. Al bloquear la descarga de `Parte_4.mp4`, permaneció visible el video anterior y apareció el aviso de recurso no disponible. Esta prueba cubre el servidor local de vista previa; compatibilidad y rendimiento en otros navegadores quedan para F4-03 y F9-01.
 
+## F4-03 — Seek, carga y pistas de audio (2026-10-22)
+
+`pnpm.cmd media:inspect` volvió a confirmar AV1 a 24 FPS, un solo keyframe en los clips 1, 3 y 4, y separaciones de 161 frames (6,71 s) en los clips 2 y 5. Todos tienen `faststart`. La pista AAC de cada clip 2–5 se decodificó en Chrome con RMS y pico **0** en ambos canales; el clip 1 no tiene pista de audio. Los videos continúan silenciados en el recorrido.
+
+Se ejecutó `pnpm.cmd exec node scripts/audit-video-performance.mjs` contra Astro Preview con Chrome 156 y caché desactivada. El script espera un segundo tras abrir la página, salta a una posición temprana y otra tardía de cada video, vuelve a la temprana y espera el fotograma correcto. Antes del cambio, la primera descarga de video fue de 9–11 MB; con URL diferida y carga del siguiente al superar 50 % del tramo, se observaron **3,02 MB** al segundo inicial. Tras recorrer todo, los cinco MP4 sumaron **16,91 MB recibidos**. En la pasada local posterior, las entradas a cada tramo tomaron 34–290 ms y los saltos internos y de regreso 4–69 ms. El heap de JavaScript al final fue 2,4 MiB usados; esta métrica **no incluye** memoria de decodificación de video. Los cinco clips permanecieron en búfer tras visitarlos.
+
+Con `SONRIE_AUDIT_SLOW=1` se simuló 4 Mb/s y 150 ms de latencia. Las entradas a los cinco videos tomaron 9,24 s, 5,31 s, 1,77 s, 1,53 s y 4,72 s en una corrida; una vez disponible el fotograma, avance y retroceso dentro del clip tomaron 3–10 ms. Es una simulación puntual, no una garantía para redes o dispositivos reales. El inicio de un tramo lejano sigue siendo costoso porque sus keyframes son escasos y debe descargarse y decodificarse video anterior. La F9-01 comprobará otros navegadores y dispositivos antes de decidir si se necesitan versiones derivadas de algún MP4. Los originales no se modificaron.
+
 **Transparencia de Parte 2:** Pillow confirmó píxeles transparentes en `Parte_2.png` (0,70 % totalmente transparentes; 0,42 % parciales) y `Parte_2.webp` (0,87 % totalmente transparentes). La foto WebP puede dejar ver el fondo en bordes; revisar la composición en F4-02/F7-03. El PNG de 9,5 MB muestra el mismo mostrador como alternativa de mayor resolución, pero no se cambia la portada activa sin evaluar peso y encuadre.
 
 ## Personajes
@@ -102,7 +110,7 @@ Estos son los nombres completos reales. La asignación a roles, identidad y espa
 - [x] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad. F4-01: tabla y cinco láminas anteriores.
 - [x] Determinar si la parada final requiere foto, último fotograma congelado o póster generado. La corrección vigente del usuario usa `Parte_6.webp` después del video 5, con su último frame y póster como respaldos.
 - [x] Confirmar presencia de pistas, códec, keyframes, color y `faststart` con `ffprobe`.
-- [ ] Probar seek y scrubbing en navegadores; confirmar si las pistas AAC tienen contenido audible; recodificar solo si las pruebas lo exigen.
+- [x] Medir seek y scrubbing en Chrome local, carga de red y silencio de las pistas AAC; F4-03. Compatibilidad en otros navegadores y posible recodificación derivada quedan para F9-01 según resultados.
 - [ ] Inspeccionar transparencia efectiva y contenido de cada PNG, y asignar rol sin atribuir nombre ni credenciales.
 - [x] Definir pósters a partir de videos, estrategia de carga y rutas publicadas; conservar `assets/`. Verificado en F4-02 con el build estático servido.
 - [ ] Registrar logo, imagen social y datos del negocio cuando se reciban.

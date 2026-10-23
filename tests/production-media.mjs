@@ -20,9 +20,11 @@ try {
   await page.locator('[data-stage]').waitFor();
   assert.equal(await page.locator('[data-debug]').count(), 0);
   assert.equal(await page.locator('[data-mode-picker]').count(), 0);
+  await page.waitForTimeout(750);
+  assert.deepEqual(await page.locator('[data-clip]').evaluateAll((videos) => videos.slice(1).map((video) => video.currentSrc)), ['', '', '', ''], 'solo el primer video debe descargarse al abrir la página');
 
   for (const group of expected) {
-    const elements = await page.locator(group.selector).evaluateAll((nodes) => nodes.map((node) => ({ asset: node.dataset.asset, src: node.getAttribute('src') })));
+    const elements = await page.locator(group.selector).evaluateAll((nodes) => nodes.map((node) => ({ asset: node.dataset.asset, src: node.getAttribute('src') ?? node.getAttribute('data-src') })));
     assert.deepEqual(elements.map((element) => element.asset), group.names);
     for (const element of elements) {
       assert.ok(element.src, `Falta URL de ${element.asset}`);

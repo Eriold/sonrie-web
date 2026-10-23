@@ -109,3 +109,10 @@
 - Se añadió `pnpm.cmd test:production` para comprobar desde Astro Preview los 15 recursos publicados, sus tipos y su igualdad por SHA-256 con los archivos fuente.
 - Chrome verificó los cinco videos, la foto final y el respaldo ante un MP4 fallido.
 - Se corrigió el aviso cuando un video vecino falla durante su precarga antes de convertirse en el tramo activo.
+
+## 2026-10-22 — F4-03, rendimiento del recorrido
+
+- Se registró F4-02 en el commit local `97de235`, sin push ni las eliminaciones previas de `assets/`.
+- Se añadieron auditorías repetibles de tiempos de seek, bytes de video, heap JavaScript y audio.
+- Se difirió la asignación de `src` y la carga del siguiente video hasta pasar la mitad del tramo actual. La descarga inicial medida bajó a unos 3,0 MB.
+- Una red simulada de 4 Mb/s mostró demoras de 1,5–9,2 s al entrar en tramos; se conserva este riesgo para pruebas de dispositivos y navegadores antes de considerar derivados de los MP4.
