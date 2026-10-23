@@ -78,6 +78,12 @@ Se extrajeron fotogramas 0, 25 %, 50 %, 75 % y final de cada MP4 con OpenCV/Pill
 
 **Corrección de secuencia posterior a F4-01:** `Parte_6.webp` llegó a `assets/` y coincide espacialmente con el último fotograma de `Parte_5.mp4`: mismo panel azul, sillón y mobiliario, con una perspectiva más amplia y leve diferencia de iluminación. Mide 4000×2252 px, pesa 442.708 bytes y es RGB sin alfa. El recorrido vigente es foto 1→video 1→foto 2→video 2→foto 3→video 3→video 4→foto 5→video 5→foto 6. La foto 5 se modela como parada **después** del video 4 para que el quinto video pueda terminar en otra parada **después** de sí mismo; sigue siendo la foto previa al video 5. El video 4 no tiene foto antes de comenzar. Se extrajeron pósters del **último** frame de los videos 4 y 5: 1920×1080, 72.572 y 64.806 bytes. Los pósters 1–3 continúan basados en el primer frame. No se alteraron los MP4 ni los WebP originales.
 
+## F4-02 — Publicación y comprobación de recursos (2026-10-22)
+
+`src/data/media.ts` importa los cinco MP4 y las cinco fotos WebP por URL desde `assets/`; los cinco pósters derivados se importan desde `src/media/posters/`. Astro emite los 15 recursos con nombres versionados en `dist/_astro/`. Se conserva un solo ejemplar de cada original en `assets/`, sin duplicarlo en `public/` ni recodificarlo.
+
+Con `pnpm.cmd build` y `pnpm.cmd preview --host 127.0.0.1 --port 4321`, `pnpm.cmd test:production` obtuvo HTTP 200 y MIME `video/mp4` o `image/webp` según el caso. Los SHA-256 de las respuestas fueron idénticos a los de los cinco videos y cinco fotos originales y a los cinco pósters de `src/media/posters/`. Chrome verificó avance controlado por scroll en los cinco videos, todos pausados, la foto final y ausencia de errores de página. Al bloquear la descarga de `Parte_4.mp4`, permaneció visible el video anterior y apareció el aviso de recurso no disponible. Esta prueba cubre el servidor local de vista previa; compatibilidad y rendimiento en otros navegadores quedan para F4-03 y F9-01.
+
 **Transparencia de Parte 2:** Pillow confirmó píxeles transparentes en `Parte_2.png` (0,70 % totalmente transparentes; 0,42 % parciales) y `Parte_2.webp` (0,87 % totalmente transparentes). La foto WebP puede dejar ver el fondo en bordes; revisar la composición en F4-02/F7-03. El PNG de 9,5 MB muestra el mismo mostrador como alternativa de mayor resolución, pero no se cambia la portada activa sin evaluar peso y encuadre.
 
 ## Personajes
@@ -98,5 +104,5 @@ Estos son los nombres completos reales. La asignación a roles, identidad y espa
 - [x] Confirmar presencia de pistas, códec, keyframes, color y `faststart` con `ffprobe`.
 - [ ] Probar seek y scrubbing en navegadores; confirmar si las pistas AAC tienen contenido audible; recodificar solo si las pruebas lo exigen.
 - [ ] Inspeccionar transparencia efectiva y contenido de cada PNG, y asignar rol sin atribuir nombre ni credenciales.
-- [ ] Definir pósters a partir de videos, estrategia de carga y rutas publicadas; conservar `assets/`.
+- [x] Definir pósters a partir de videos, estrategia de carga y rutas publicadas; conservar `assets/`. Verificado en F4-02 con el build estático servido.
 - [ ] Registrar logo, imagen social y datos del negocio cuando se reciban.

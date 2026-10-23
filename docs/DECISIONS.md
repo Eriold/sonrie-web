@@ -81,3 +81,7 @@ F4-01 confirmó que varios clips cruzan más de un espacio: los videos 2, 3, 4 y
 ## D-019 — Foto final Parte 6 sin sexto video (2026-10-22)
 
 El usuario añadió `Parte_6.webp` y pidió mostrarla al terminar `Parte_5.mp4`. La comparación con el último frame confirmó la sala del panel azul y su mobiliario, con perspectiva más abierta. El motor ya admite paradas después de un video: `Parte_4.mp4` lleva una parada posterior con `Parte_5.webp` (la portada del video 5) y `Parte_5.mp4` lleva la parada final con `Parte_6.webp`. Así el video 4 no tiene foto inicial y se conservan cinco clips. Se regeneró el póster de Parte 5 desde su último frame y se añadió el de Parte 4, también desde el último frame, como respaldos. Esta decisión sustituye la ausencia de foto final indicada en D-014 a D-018; las entradas anteriores permanecen como historial.
+
+## D-020 — Medios versionados por Astro y verificación de producción (2026-10-22)
+
+F4-02 confirma la decisión iniciada en D-011: importar los originales por URL desde `assets/` y dejar que Astro los copie al build con nombres versionados. La alternativa orientativa `public/video/` duplicaría los MP4 sin aportar una función necesaria. La prueba `pnpm.cmd test:production` verifica HTTP, MIME y hash de los 15 recursos servidos, reproducción por scroll de los cinco clips y respaldo ante fallo de un video. Se corrigió además el aviso cuando un video vecino ya había fallado durante la precarga antes de activarse.

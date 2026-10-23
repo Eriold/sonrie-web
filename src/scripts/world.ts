@@ -194,7 +194,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       status.textContent = state.phase === 'stop'
         ? `Parada ${stopButtons.findIndex((button) => Number(button.dataset.gotoStop) === activeIndex) + 1} de ${stopButtons.length}. Contenido en preparación.`
         : `Tramo ${activeIndex + 1} de ${videos.length}. Desplázate para avanzar o retroceder.`;
-    }
+    } else status.textContent = 'Video no disponible. Puedes saltar el recorrido.';
     updateVisual();
     if (debug) debug.textContent = `Tramo ${activeIndex + 1}/${videos.length} · ${state.phase} ${(state.stopProgress * 100).toFixed(0)}% · scroll ${(progress * 100).toFixed(1)}% · video ${state.videoTimeSeconds.toFixed(2)} s · ${stage.dataset.visual}`;
   };

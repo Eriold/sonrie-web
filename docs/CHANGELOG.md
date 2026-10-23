@@ -102,3 +102,10 @@
 - Se generaron pósters desde los últimos frames de los videos 4 y 5, sin tocar los originales.
 - Se comparó la foto 6 con el final del video 5 y se amplió la prueba de navegador para el cierre, sus modos de fondo y el fallo de la imagen.
 - Pasaron `pnpm.cmd test` (6/6), `pnpm.cmd check` (0 diagnósticos), `pnpm.cmd build` (5 videos, 5 fotos y 5 pósters en una página) y `pnpm.cmd test:browser` (sin errores de página).
+
+## 2026-10-22 — F4-02, medios del build estático
+
+- Se creó el commit local `44b178f` con F4-01 y la foto final, sin push ni inclusión de las cuatro eliminaciones antiguas en `assets/`.
+- Se añadió `pnpm.cmd test:production` para comprobar desde Astro Preview los 15 recursos publicados, sus tipos y su igualdad por SHA-256 con los archivos fuente.
+- Chrome verificó los cinco videos, la foto final y el respaldo ante un MP4 fallido.
+- Se corrigió el aviso cuando un video vecino falla durante su precarga antes de convertirse en el tramo activo.
