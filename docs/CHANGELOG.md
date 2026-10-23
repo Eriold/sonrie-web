@@ -80,3 +80,10 @@
 - Se restituyó `Parte_4.mp4` entre los videos 3 y 5; solo este tramo carece de foto y parada previa.
 - Se renombró `assets/Parte_4.webp` a `assets/Parte_5.webp` y se actualizaron las referencias y pruebas.
 - La navegación conserva cuatro botones de parada fotográfica para cinco videos. Chrome verificó el paso directo entre los videos 3 y 4 y la foto antes del video 5.
+
+## 2026-10-22 — F3-03, precarga y continuidad visual
+
+- Se preparan las imágenes mediante `decode()` y se cargan los videos vecinos al tramo activo.
+- El fondo anterior sigue visible hasta que el siguiente fotograma o imagen está disponible; el fundido conserva una capa saliente.
+- Una foto fallida utiliza su póster como respaldo. Chrome verificó video 3→4 retrasado, regreso sin fondo vacío y fallo de la foto 5.
+- Pasaron `pnpm.cmd test` (6/6), `pnpm.cmd check` (0 diagnósticos), `pnpm.cmd build` (1 página) y `pnpm.cmd test:browser`.

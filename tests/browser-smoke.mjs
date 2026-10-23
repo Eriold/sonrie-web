@@ -120,6 +120,39 @@ try {
     fit: getComputedStyle(photo).objectFit,
   }));
   assert.deepEqual(mobilePhoto, { width: 390, height: 844, fit: 'cover' });
+
+  const delayed = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  let releaseFourth;
+  const fourthReleased = new Promise((resolve) => { releaseFourth = resolve; });
+  await delayed.route((url) => url.pathname.includes('Parte_4.') && url.pathname.endsWith('.mp4'), async (route) => {
+    await fourthReleased;
+    await route.continue();
+  });
+  await delayed.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await delayed.evaluate(() => window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 15 * innerHeight));
+  await delayed.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.visual === 'video' && document.querySelector('[data-clip][data-index="2"]')?.classList.contains('is-active'), { timeout: 30000 });
+  await delayed.evaluate(() => window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 18.5 * innerHeight));
+  await delayed.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.segmentIndex === '3');
+  assert.equal(await delayed.locator('[data-clip][data-index="2"].is-active').count(), 1, 'el video anterior permanece visible mientras carga el siguiente');
+  assert.notEqual(await delayed.locator('[data-stage]').getAttribute('data-visual'), 'fallback');
+  releaseFourth();
+  await delayed.waitForFunction(() => document.querySelector('[data-clip][data-index="3"]')?.classList.contains('is-active'), { timeout: 30000 });
+  await delayed.evaluate(() => {
+    const stage = document.querySelector('[data-stage]');
+    window.visualHistory = [stage.dataset.visual];
+    new MutationObserver(() => window.visualHistory.push(stage.dataset.visual)).observe(stage, { attributes: true, attributeFilter: ['data-visual'] });
+    window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 15 * innerHeight);
+  });
+  await delayed.waitForFunction(() => document.querySelector('[data-clip][data-index="2"]')?.classList.contains('is-active') && document.querySelector('[data-stage]')?.dataset.segmentIndex === '2');
+  assert.equal(await delayed.evaluate(() => window.visualHistory.includes('fallback')), false, 'el regreso conserva un fondo visible');
+
+  const brokenPhoto = await browser.newPage({ viewport: { width: 1280, height: 720 } });
+  await brokenPhoto.route((url) => url.pathname.includes('Parte_5.') && url.pathname.endsWith('.webp'), (route) => route.abort());
+  await brokenPhoto.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await brokenPhoto.getByRole('button', { name: 'Ir a la parada 4' }).click();
+  await brokenPhoto.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.segmentIndex === '4' && document.querySelector('[data-stage]')?.dataset.phase === 'stop');
+  await brokenPhoto.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.visual === 'poster-image', { timeout: 30000 });
+  assert.equal(await brokenPhoto.locator('[data-poster][data-index="4"].is-active').count(), 1, 'el póster sustituye la foto fallida');
   console.log(JSON.stringify({ sequence: 'foto 1 → video 1 → foto 2 → video 2 → foto 3 → video 3 → video 4 → foto 5 → video 5', forward, backward, mediaModes: 'ok', responsive: 'ok', reducedMotion: 'ok', errors }, null, 2));
 } finally {
   await browser.close();

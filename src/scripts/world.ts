@@ -33,21 +33,74 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const targetTimes = videos.map(() => 0);
   const selectedModes = timeline.segments.map((segment) => segment.stopMediaMode);
   const allImages = [...posters, ...photos];
+  const preparedImages = new WeakSet<HTMLImageElement>();
+  const preparingImages = new WeakSet<HTMLImageElement>();
+  let visibleLayer: HTMLVideoElement | HTMLImageElement | undefined;
+  let transitionTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const activateLayer = (next: HTMLVideoElement | HTMLImageElement, visual: string): void => {
+    if (visibleLayer === next) {
+      stage.dataset.visual = visual;
+      return;
+    }
+    if (transitionTimer) clearTimeout(transitionTimer);
+    const previous = visibleLayer;
+    [...videos, ...allImages].forEach((layer) => {
+      if (layer !== previous && layer !== next) {
+        layer.classList.remove('is-active', 'is-outgoing');
+        layer.style.zIndex = '';
+      }
+    });
+    if (previous) {
+      previous.style.zIndex = '0';
+      previous.classList.remove('is-active');
+      previous.classList.add('is-outgoing');
+    }
+    next.style.zIndex = '1';
+    next.classList.remove('is-outgoing');
+    next.classList.add('is-active');
+    visibleLayer = next;
+    stage.dataset.visual = visual;
+    if (previous) transitionTimer = setTimeout(() => {
+      previous.classList.remove('is-outgoing');
+      previous.style.zIndex = '';
+      transitionTimer = undefined;
+    }, 200);
+  };
 
   const updateVisual = (): void => {
     const mode = currentPhase === 'stop' ? selectedModes[activeIndex] : 'video-freeze';
-    const candidate = mode === 'poster-image' ? posters.find((poster) => poster.dataset.index === String(activeIndex))
+    const preferred = mode === 'poster-image' ? posters.find((poster) => poster.dataset.index === String(activeIndex))
       : mode === 'high-res-image' ? photos.find((photo) => photo.dataset.index === String(activeIndex))
         : undefined;
-    const imageReady = candidate?.complete && candidate.naturalWidth > 0;
-    allImages.forEach((image) => image.classList.toggle('is-active', image === candidate && Boolean(imageReady)));
-    stage.dataset.visual = imageReady ? mode : shownIndex === activeIndex ? 'video' : 'fallback';
+    if (preferred && preparedImages.has(preferred)) {
+      activateLayer(preferred, mode);
+      return;
+    }
+    if (mode === 'video-freeze' && shownIndex === activeIndex) {
+      activateLayer(videos[activeIndex], 'video');
+      return;
+    }
+    if (currentPhase === 'stop') {
+      const poster = posters.find((image) => image.dataset.index === String(activeIndex));
+      if (poster && preparedImages.has(poster)) {
+        activateLayer(poster, 'poster-image');
+        return;
+      }
+    }
+    if (shownIndex === activeIndex) activateLayer(videos[activeIndex], 'video');
+    else if (!visibleLayer) stage.dataset.visual = 'fallback';
   };
 
-  allImages.forEach((image) => {
-    image.addEventListener('load', updateVisual);
-    image.addEventListener('error', updateVisual);
-  });
+  const prepareImage = (image: HTMLImageElement | undefined): void => {
+    if (!image || preparedImages.has(image) || preparingImages.has(image)) return;
+    preparingImages.add(image);
+    image.loading = 'eager';
+    image.decode().then(() => {
+      preparedImages.add(image);
+      updateVisual();
+    }).catch(() => updateVisual());
+  };
 
   const targetTime = (index: number): number => {
     const duration = Number.isFinite(videos[index].duration) ? videos[index].duration : timeline.segments[index].durationSeconds;
@@ -58,7 +111,6 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     const video = videos[index];
     if (index !== activeIndex || video.readyState < 2 || video.seeking || Math.abs(video.currentTime - targetTime(index)) > 0.025) return;
     shownIndex = index;
-    videos.forEach((clip, clipIndex) => clip.classList.toggle('is-active', clipIndex === index));
     updateVisual();
   };
 
@@ -91,7 +143,6 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     video.addEventListener('error', () => {
       failed.add(index);
       if (index === activeIndex) {
-        videos.forEach((clip) => clip.classList.remove('is-active'));
         shownIndex = -1;
         updateVisual();
         status.textContent = 'Video no disponible. Puedes saltar el recorrido.';
@@ -101,16 +152,20 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
 
   const render = (progress: number): void => {
     const state = resolveTourPosition(timeline, progress * timeline.totalUnits);
-    if (activeIndex !== state.segmentIndex) {
-      videos.forEach((clip) => clip.classList.remove('is-active'));
-      shownIndex = -1;
-    }
+    if (activeIndex !== state.segmentIndex) shownIndex = -1;
     activeIndex = state.segmentIndex;
     currentPhase = state.phase;
     const video = videos[activeIndex];
     targetTimes[activeIndex] = state.videoTimeSeconds;
     video.pause();
     load(activeIndex);
+    if (activeIndex > 0) load(activeIndex - 1);
+    if (activeIndex + 1 < videos.length) load(activeIndex + 1);
+    for (const index of [activeIndex - 1, activeIndex, activeIndex + 1]) {
+      if (index < 0 || index >= videos.length) continue;
+      prepareImage(photos.find((image) => image.dataset.index === String(index)));
+      prepareImage(posters.find((image) => image.dataset.index === String(index)));
+    }
     seek(activeIndex);
     counter.textContent = String(activeIndex + 1).padStart(2, '0');
     stopButtons.forEach((button) => {

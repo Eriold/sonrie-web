@@ -69,3 +69,7 @@ La corrección posterior del usuario sustituye el orden video→parada descrito 
 ## D-016 — Cinco videos y foto renombrada para el quinto (2026-10-22)
 
 El usuario aclaró que D-015 interpretó mal el cuarto tramo: `Parte_4.mp4` sí pertenece al recorrido y solo carece de foto previa. La secuencia vigente es foto 1→video 1→foto 2→video 2→foto 3→video 3→video 4→foto 5→video 5. El archivo original `assets/Parte_4.webp` se renombró a `assets/Parte_5.webp` por indicación expresa del usuario; esa foto abre `Parte_5.mp4`. La configuración usa `stopPlacement: 'none'` para el video 4, sin parada ni foto, y conserva las cuatro paradas fotográficas restantes. Esta decisión sustituye D-015 en cuanto al cuarto video y al nombre de la foto; la especificación fuente se conserva como registro histórico.
+
+## D-017 — Conservar la capa saliente durante la carga (2026-10-22)
+
+F3-03 prepara fotos y pósters con `HTMLImageElement.decode()` y carga el video activo y los segmentos vecinos. Solo activa el nuevo video cuando el fotograma pedido está disponible; hasta entonces conserva la capa anterior. Un cambio de capa mantiene brevemente la saliente bajo la entrante para evitar fondos vacíos durante el fundido. Si falla una foto de parada se presenta su póster; si tampoco está disponible, se mantiene el video decodificado o la última capa visible. La prueba de Chrome retrasó el cuarto video y bloqueó la foto 5 para verificar los respaldos.
