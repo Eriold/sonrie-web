@@ -28,6 +28,8 @@ Para comprobar los medios publicados por el build estático, ejecuta `pnpm build
 
 Para repetir la auditoría de F4-03 con Preview activo, ejecuta `pnpm.cmd exec node scripts/audit-video-performance.mjs` y `pnpm.cmd exec node scripts/audit-video-audio.mjs`. La primera admite `SONRIE_AUDIT_SLOW=1` para simular 4 Mb/s y 150 ms; las cifras dependen del equipo y no representan todos los navegadores. Los MP4 se asignan al elemento de video cuando se necesitan, y el siguiente se carga al superar la mitad del tramo.
 
+Los diálogos de demostración están en `src/data/dialogues.ts`. Con Preview activo, `pnpm.cmd exec node tests/dialogue-browser.mjs` comprueba páginas, teclado, tacto, regreso y movimiento reducido. Cada acción externa requiere una persona real identificada y un enlace confirmado; los personajes actuales son prototipos y no muestran botones de redes ni acreditación. La consulta pública ReTHUS se documenta en `docs/DECISIONS.md`.
+
 ## Organización
 
 - `assets/`: medios originales; conservar sin sobrescribir.

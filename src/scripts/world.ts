@@ -18,6 +18,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const posters = [...world.querySelectorAll<HTMLImageElement>('[data-poster]')];
   const photos = [...world.querySelectorAll<HTMLImageElement>('[data-photo]')];
   const characters = [...world.querySelectorAll<HTMLImageElement>('[data-character]')];
+  const dialogueElements = [...world.querySelectorAll<HTMLElement>('[data-dialogue]')];
   if (!stage || !status || !counter || videos.length !== timeline.segments.length || stops.length !== timeline.segments.filter((segment) => segment.stopUnits > 0).length) return;
 
   if (staticMode) {
@@ -41,8 +42,47 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   const preparingImages = new WeakSet<HTMLImageElement>();
   const preparedCharacters = new WeakSet<HTMLImageElement>();
   const preparingCharacters = new WeakSet<HTMLImageElement>();
+  const failedCharacters = new WeakSet<HTMLImageElement>();
   let visibleLayer: HTMLVideoElement | HTMLImageElement | undefined;
   let transitionTimer: ReturnType<typeof setTimeout> | undefined;
+  const dialoguePages = new Map<string, number>();
+
+  const showDialoguePage = (dialogue: HTMLElement): void => {
+    const stopId = dialogue.dataset.stopId ?? '';
+    const pages = [...dialogue.querySelectorAll<HTMLElement>('[data-dialogue-page]')];
+    const pageIndex = Math.min(Math.max(dialoguePages.get(stopId) ?? 0, 0), pages.length - 1);
+    pages.forEach((page, index) => { page.hidden = index !== pageIndex; });
+    const previous = dialogue.querySelector<HTMLButtonElement>('[data-dialogue-prev]');
+    const next = dialogue.querySelector<HTMLButtonElement>('[data-dialogue-next]');
+    if (previous) previous.disabled = pageIndex === 0;
+    if (next) next.disabled = pageIndex === pages.length - 1;
+    const indicator = dialogue.querySelector<HTMLElement>('[data-page-indicator]');
+    if (indicator) indicator.textContent = `${pageIndex + 1} / ${pages.length}`;
+  };
+
+  dialogueElements.forEach((dialogue) => {
+    const stopId = dialogue.dataset.stopId ?? '';
+    dialogue.querySelector<HTMLButtonElement>('[data-dialogue-prev]')?.addEventListener('click', () => {
+      dialoguePages.set(stopId, (dialoguePages.get(stopId) ?? 0) - 1);
+      showDialoguePage(dialogue);
+    });
+    dialogue.querySelector<HTMLButtonElement>('[data-dialogue-next]')?.addEventListener('click', () => {
+      dialoguePages.set(stopId, (dialoguePages.get(stopId) ?? 0) + 1);
+      showDialoguePage(dialogue);
+    });
+    showDialoguePage(dialogue);
+  });
+
+  const updateDialogue = (): void => {
+    const character = characters.find((image) => image.dataset.stopId === currentStopId);
+    const visualReady = stage.dataset.visual === 'high-res-image' || stage.dataset.visual === 'poster-image';
+    const visible = currentPhase === 'stop' && resolveStopCharacter(currentStopId, currentStopProgress) !== null
+      && visualReady && (!character || preparedCharacters.has(character) || failedCharacters.has(character));
+    dialogueElements.forEach((dialogue) => {
+      dialogue.hidden = !visible || dialogue.dataset.stopId !== currentStopId;
+    });
+    stage.dataset.dialogueVisible = String(visible);
+  };
 
   const updateCharacter = (): void => {
     const selected = currentPhase === 'stop' && stage.dataset.visual === 'high-res-image'
@@ -61,7 +101,12 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     image.decode().then(() => {
       preparedCharacters.add(image);
       updateCharacter();
-    }).catch(() => updateCharacter());
+      updateDialogue();
+    }).catch(() => {
+      failedCharacters.add(image);
+      updateCharacter();
+      updateDialogue();
+    });
   };
 
   const activateLayer = (next: HTMLVideoElement | HTMLImageElement, visual: string): void => {
@@ -126,7 +171,11 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       preparedImages.add(image);
       updateVisual();
       updateCharacter();
-    }).catch(() => updateVisual());
+      updateDialogue();
+    }).catch(() => {
+      updateVisual();
+      updateDialogue();
+    });
   };
 
   const targetTime = (index: number): number => {
@@ -139,6 +188,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     if (index !== activeIndex || video.readyState < 2 || video.seeking || Math.abs(video.currentTime - targetTime(index)) > 0.025) return;
     shownIndex = index;
     updateVisual();
+    updateDialogue();
   };
 
   const seek = (index: number): void => {
@@ -231,6 +281,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     } else status.textContent = 'Video no disponible. Puedes saltar el recorrido.';
     updateVisual();
     updateCharacter();
+    updateDialogue();
     if (debug) debug.textContent = `Tramo ${activeIndex + 1}/${videos.length} · ${state.phase} ${(state.stopProgress * 100).toFixed(0)}% · scroll ${(progress * 100).toFixed(1)}% · video ${state.videoTimeSeconds.toFixed(2)} s · ${stage.dataset.visual}`;
   };
 
@@ -238,6 +289,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     selectedModes[activeIndex] = modeSelect.value as StopMediaMode;
     updateVisual();
     updateCharacter();
+    updateDialogue();
   });
 
   const trigger = ScrollTrigger.create({

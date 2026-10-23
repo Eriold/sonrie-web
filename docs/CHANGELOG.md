@@ -129,3 +129,10 @@
 - Los prototipos aparecen después del 35 % de scroll de su fotografía, con entrada y salida reversibles. Se cargan cerca del umbral y no bloquean controles.
 - Se ajustó la posición móvil tras revisar capturas; el personaje deja libres la tarjeta superior y el bloque inferior.
 - Se comprobaron los cuatro PNG publicados por hash, cinco paradas, regreso, movimiento reducido y fallo de un personaje con la foto aún visible.
+
+## 2026-10-23 — F5-03, diálogos paginados
+
+- Se registró F5-02 en el commit local `02bdd46`, sin push ni las cuatro eliminaciones antiguas de `assets/`.
+- Cada parada muestra un diálogo de dos páginas después de apreciar la fotografía; los botones funcionan con mouse, teclado y tacto, y el scroll no cambia la página.
+- El texto sigue disponible al regresar a una parada, si falla el avatar y en modo de movimiento reducido.
+- Se prepararon enlaces opcionales de redes y consulta ReTHUS con filtros de confirmación y dominio oficial; los prototipos no publican ninguno.

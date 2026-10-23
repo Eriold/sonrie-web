@@ -1,6 +1,7 @@
 ---
 import { tourSegments } from '../data/tour';
 import { characterPrototypes, stopCharacters } from '../data/characters';
+import { dialogues, visibleDialogueActions } from '../data/dialogues';
 import { characterUrls, photoUrls, posterUrls, videoUrls } from '../data/media';
 import { createTourTimeline } from '../scripts/timeline';
 
@@ -10,6 +11,11 @@ const characterLayers = stopSegments.flatMap(({ segment, segmentIndex }) => {
   const assignment = stopCharacters.find((entry) => entry.stopId === segment.stopId);
   const character = characterPrototypes.find((entry) => entry.id === assignment?.characterId);
   return character ? [{ segmentIndex, stopId: segment.stopId, character }] : [];
+});
+const dialogueLayers = stopSegments.flatMap(({ segment, segmentIndex }, stopIndex) => {
+  const dialogue = dialogues.find((entry) => entry.stopId === segment.stopId);
+  const character = characterLayers.find((entry) => entry.stopId === segment.stopId)?.character;
+  return dialogue && character ? [{ segmentIndex, stopIndex, dialogue, character, actions: visibleDialogueActions(dialogue) }] : [];
 });
 const isDev = import.meta.env.DEV;
 ---
@@ -85,6 +91,29 @@ const isDev = import.meta.env.DEV;
         decoding="async"
       />
     ))}
+    {dialogueLayers.map(({ segmentIndex, stopIndex, dialogue, character, actions }) => (
+      <section
+        class="dialogue"
+        data-dialogue
+        data-stop-index={segmentIndex}
+        data-stop-id={dialogue.stopId}
+        aria-label={`Diálogo de la parada ${stopIndex + 1}`}
+        hidden
+      >
+        <p class="dialogue-eyebrow">Personaje ilustrativo · Prototipo</p>
+        <h3>{character.displayLabel}</h3>
+        <div class="dialogue-pages" aria-live="polite">
+          {dialogue.pages.map((page, index) => <p data-dialogue-page data-page-index={index} hidden={index > 0}>{page}</p>)}
+        </div>
+        <div class="dialogue-controls" aria-label="Páginas del diálogo">
+          <button type="button" data-dialogue-prev aria-label="Página anterior" disabled>Anterior</button>
+          <span data-page-indicator aria-live="off">1 / {dialogue.pages.length}</span>
+          <button type="button" data-dialogue-next aria-label="Siguiente página">Siguiente</button>
+        </div>
+        <a class="dialogue-skip" href="#despues-del-recorrido">Saltar el recorrido</a>
+        {actions.length > 0 && <nav class="dialogue-actions" aria-label="Enlaces del perfil">{actions.map((action) => <a data-dialogue-action href={action.url} target="_blank" rel="noopener noreferrer">{action.label}</a>)}</nav>}
+      </section>
+    ))}
     <div class="copy">
       <p class="eyebrow">Recorrido en preparación · {timeline.segments.length} tramos</p>
       <h2>Conoce Sonríe</h2>
@@ -111,6 +140,15 @@ const isDev = import.meta.env.DEV;
     )}
     {isDev && <output class="debug" data-debug aria-label="Depuración del recorrido">Iniciando recorrido…</output>}
   </div>
+  <div class="static-dialogues" aria-label="Información del recorrido sin animación">
+    {dialogueLayers.map(({ stopIndex, dialogue, character, actions }) => (
+      <article data-static-dialogue>
+        <h3>Parada {stopIndex + 1} · {character.displayLabel}</h3>
+        {dialogue.pages.map((page) => <p>{page}</p>)}
+        {actions.length > 0 && <nav aria-label="Enlaces del perfil">{actions.map((action) => <a data-dialogue-action href={action.url} target="_blank" rel="noopener noreferrer">{action.label}</a>)}</nav>}
+      </article>
+    ))}
+  </div>
 </section>
 
 <script>
@@ -135,6 +173,23 @@ const isDev = import.meta.env.DEV;
   .stop p:last-child { margin: 0; }
   .character { position: absolute; z-index: 2; right: clamp(3.5rem, 7vw, 7rem); bottom: 0; max-width: min(45vw, 42rem); height: min(86svh, 56rem); object-fit: contain; object-position: bottom right; pointer-events: none; opacity: 0; visibility: hidden; transform: translateY(1.5rem); transition: opacity 240ms ease, transform 240ms ease, visibility 0s linear 240ms; }
   .character.is-visible { opacity: 1; visibility: visible; transform: translateY(0); transition: opacity 240ms ease, transform 240ms ease, visibility 0s; }
+  .stage[data-dialogue-visible='true'] .stop:not([hidden]) { display: none; }
+  .stage[data-dialogue-visible='true'] .copy { opacity: 0; visibility: hidden; pointer-events: none; }
+  .dialogue { position: absolute; z-index: 3; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(1.5rem, 5vh, 3rem); width: min(35rem, calc(100% - 8rem)); padding: 1.25rem 1.5rem; border: 1px solid rgb(255 255 255 / 55%); border-radius: 1rem; background: rgb(7 30 34 / 89%); box-shadow: 0 1rem 2rem rgb(0 0 0 / 20%); backdrop-filter: blur(12px); }
+  .dialogue[hidden] { display: none; }
+  .dialogue-eyebrow { margin: 0 0 .4rem; font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; }
+  .dialogue h3 { margin: 0 0 .6rem; font-size: clamp(1rem, 2vw, 1.4rem); }
+  .dialogue-pages p { margin: 0; line-height: 1.5; }
+  .dialogue-pages p[hidden] { display: none; }
+  .dialogue-controls { display: flex; align-items: center; gap: .75rem; margin-top: 1rem; }
+  .dialogue-controls button, .dialogue-actions a { border: 1px solid rgb(255 255 255 / 70%); border-radius: 999px; padding: .45rem .8rem; background: transparent; color: white; cursor: pointer; font: inherit; }
+  .dialogue-controls button:disabled { opacity: .45; cursor: default; }
+  .dialogue-controls button:focus-visible, .dialogue-actions a:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+  [data-page-indicator] { font-variant-numeric: tabular-nums; font-size: .8rem; }
+  .dialogue-skip { display: inline-block; margin-top: .75rem; font-size: .8rem; text-underline-offset: .2em; }
+  .dialogue-skip:focus-visible { outline: 3px solid white; outline-offset: 3px; }
+  .dialogue-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
+  .static-dialogues { display: none; }
   .copy { position: absolute; z-index: 2; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); max-width: 34rem; }
   .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: .75rem; }
   h2 { margin: .6rem 0; font-size: clamp(2.75rem, 7vw, 6rem); line-height: 1; }
@@ -157,6 +212,10 @@ const isDev = import.meta.env.DEV;
   .world[data-motion='off'] .stop-image { display: none; }
   .world[data-motion='off'] .character { display: none; }
   .world[data-motion='off'] .stops { display: none; }
-  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .debug { display: none; } }
+  .world[data-motion='off'] .static-dialogues { display: grid; gap: 1rem; padding: 1.5rem; background: #173b40; color: white; }
+  .static-dialogues article { padding: 1rem 1.25rem; border: 1px solid rgb(255 255 255 / 45%); border-radius: .75rem; background: rgb(7 30 34 / 75%); }
+  .static-dialogues h3 { margin: 0 0 .5rem; }
+  .static-dialogues p { margin: .4rem 0; }
+  @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }
 </style>

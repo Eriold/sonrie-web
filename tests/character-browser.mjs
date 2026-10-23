@@ -54,10 +54,15 @@ try {
   await mobile.locator('[data-character].is-visible').waitFor();
   await mobile.waitForFunction(() => getComputedStyle(document.querySelector('[data-character].is-visible')).transform === 'matrix(1, 0, 0, 1, 0, 0)');
   const bounds = await mobile.locator('[data-character].is-visible').boundingBox();
-  const copyBounds = await mobile.locator('.copy').boundingBox();
+  const layers = await mobile.evaluate(() => ({
+    copyVisibility: getComputedStyle(document.querySelector('.copy')).visibility,
+    characterZ: Number(getComputedStyle(document.querySelector('[data-character].is-visible')).zIndex),
+    dialogueZ: Number(getComputedStyle(document.querySelector('[data-dialogue]:not([hidden])')).zIndex),
+  }));
   if (process.env.SONRIE_CAPTURE === '1') await mobile.screenshot({ path: 'dist/f5-character-mobile.png' });
   assert.ok(bounds && bounds.x >= 0 && bounds.x + bounds.width <= 390 && bounds.y >= 0 && bounds.y + bounds.height <= 844);
-  assert.ok(bounds && copyBounds && bounds.y + bounds.height <= copyBounds.y, `el personaje deja libre el bloque de título y controles: ${JSON.stringify({ bounds, copyBounds })}`);
+  assert.equal(layers.copyVisibility, 'hidden');
+  assert.ok(layers.dialogueZ > layers.characterZ, 'el diálogo queda por encima del personaje');
   assert.equal(await mobile.locator('[data-character].is-visible').evaluate((image) => getComputedStyle(image).pointerEvents), 'none');
 
   const reduced = await browser.newPage({ reducedMotion: 'reduce' });
