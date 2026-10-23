@@ -4,7 +4,7 @@ Landing estática en preparación para Sonríe Urrao. El recorrido provisional m
 
 ## Requisitos
 
-- Node.js 22.22.0 o superior.
+- Node.js 22.23.4 o superior; GitHub Actions usa la rama LTS 24.
 - pnpm 11.1.1, fijado en `package.json`.
 
 ## Desarrollo local

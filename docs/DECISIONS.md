@@ -111,3 +111,7 @@ F6-01 usa Canvas 2D sin dependencia nueva. `src/data/particles.ts` define por pa
 ## D-026 — Workflow provisional para GitHub Pages (2026-10-23)
 
 Por petición del usuario, se prepara el despliegue automático al subir cambios a `main` del repositorio `Eriold/sonrie-web`. Astro recibe `site=https://eriold.github.io` y `base=/sonrie-web` durante el build para que los recursos funcionen bajo la ruta del repositorio. El workflow comprueba tipos y pruebas unitarias, compila con pnpm y entrega `dist/` a GitHub Pages. El prototipo conserva `noindex`; se omite el sitemap en ese build mediante `PUBLIC_SITEMAP=false`. La configuración local no publica el sitio: falta seleccionar GitHub Actions como fuente de Pages y subir los cambios a `main`. Un dominio propio requerirá ajustar `site`, `base` y Pages.
+
+## D-027 — Node LTS 24 para el workflow (2026-10-23)
+
+El build remoto estaba fijado en Node 22.22.0, por debajo del mínimo `>=22.23.4` declarado por Astro 7.4.2 y dependencias del lockfile. Se ajusta el workflow a la rama LTS 24 y el mínimo de `package.json` a 22.23.4. Con Node 24.13.1 local, pnpm 11.1.1 instaló el lockfile congelado sin cambios, Astro Check informó cero diagnósticos, pasaron las 11 pruebas y se generó el build de Pages. No se cambian versiones de librerías por este motivo; el workflow remoto con Node 24 sigue pendiente de ejecución.

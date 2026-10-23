@@ -154,3 +154,8 @@
 
 - Se autorizó en pnpm el script de `@ffprobe-installer/linux-x64`, requerido por la dependencia de desarrollo de ffprobe en el runner Linux.
 - La instalación local con lockfile congelado, el chequeo de Astro y las 11 pruebas pasaron; queda pendiente repetir el workflow remoto.
+
+## 2026-10-23 — Compatibilidad con Node 24
+
+- Se alineó el workflow con Node LTS 24 y el mínimo declarado del proyecto con Astro 7.4.2 (`>=22.23.4`).
+- El lockfile y las versiones de librerías permanecen iguales; instalación, chequeo, 11 pruebas y build de Pages pasaron con Node 24.13.1 local.
