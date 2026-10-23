@@ -201,3 +201,8 @@
 - Se sustituyeron los botones circulares por marcas rectangulares y se usó una paleta neutra de marfil y gris carbón.
 - Una columna oscura translúcida mantiene legibles el riel, el progreso y los números sobre los fotogramas.
 - El comportamiento del control y sus saltos se conservaron; falta opinión visual en los teléfonos físicos.
+
+## 2026-10-23 — Barra sin panel de fondo
+
+- Se eliminó el fondo, borde y sombra de la columna de navegación.
+- El riel y su progreso conservan un contorno fino para distinguirse sobre videos claros; las marcas 01–05 y el indicador horizontal permanecen.

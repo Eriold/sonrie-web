@@ -133,3 +133,7 @@ Los botones 01–05 siguen siendo saltos directos a las paradas, pero ahora comp
 ## D-031 — Apariencia de tira de película para la navegación (2026-10-23)
 
 Tras aprobar el comportamiento del riel, el usuario pidió retirar los círculos y revisar los colores. La navegación adopta una columna oscura translúcida con marcas rectangulares 01–05, tipografía monoespaciada y una paleta neutra de marfil y gris carbón. La marca activa invierte estos tonos. Se mantiene la línea horizontal que cruza el progreso, así como la posición y las áreas interactivas de los cinco botones. La capa visual no usa filtros de desenfoque ni añade imágenes o animaciones, para evitar costo extra en móviles. F7-03 revisará el lenguaje visual completo y su contraste en los dispositivos reales.
+
+## D-032 — Riel sin fondo continuo (2026-10-23)
+
+El usuario pidió retirar la columna oscura de D-031. El riel conserva solo la línea de progreso, el indicador horizontal y las cinco marcas rectangulares individuales; se eliminan fondo, borde y sombra del contenedor. Un contorno fino oscuro en la línea mantiene contraste sobre los fotogramas claros sin cubrir el video. La geometría y la lógica del control no cambian.
