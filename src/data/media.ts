@@ -3,6 +3,16 @@ import parte2 from '../../assets/Parte_2.mp4?url';
 import parte3 from '../../assets/Parte_3.mp4?url';
 import parte4 from '../../assets/Parte_4.mp4?url';
 import parte5 from '../../assets/Parte_5.mp4?url';
+import mobile1Portrait from '../media/mobile/Parte_1-mobile-portrait.mp4?url';
+import mobile2Portrait from '../media/mobile/Parte_2-mobile-portrait.mp4?url';
+import mobile3Portrait from '../media/mobile/Parte_3-mobile-portrait.mp4?url';
+import mobile4Portrait from '../media/mobile/Parte_4-mobile-portrait.mp4?url';
+import mobile5Portrait from '../media/mobile/Parte_5-mobile-portrait.mp4?url';
+import mobile1Landscape from '../media/mobile/Parte_1-mobile-landscape.mp4?url';
+import mobile2Landscape from '../media/mobile/Parte_2-mobile-landscape.mp4?url';
+import mobile3Landscape from '../media/mobile/Parte_3-mobile-landscape.mp4?url';
+import mobile4Landscape from '../media/mobile/Parte_4-mobile-landscape.mp4?url';
+import mobile5Landscape from '../media/mobile/Parte_5-mobile-landscape.mp4?url';
 import foto1 from '../../assets/Parte_1.webp?url';
 import foto2 from '../../assets/Parte_2.webp?url';
 import foto3 from '../../assets/Parte_3.webp?url';
@@ -24,6 +34,22 @@ export const videoUrls: Readonly<Record<string, string>> = {
   'Parte_3.mp4': parte3,
   'Parte_4.mp4': parte4,
   'Parte_5.mp4': parte5,
+};
+
+export const mobilePortraitVideoUrls: Readonly<Record<string, string>> = {
+  'Parte_1.mp4': mobile1Portrait,
+  'Parte_2.mp4': mobile2Portrait,
+  'Parte_3.mp4': mobile3Portrait,
+  'Parte_4.mp4': mobile4Portrait,
+  'Parte_5.mp4': mobile5Portrait,
+};
+
+export const mobileLandscapeVideoUrls: Readonly<Record<string, string>> = {
+  'Parte_1.mp4': mobile1Landscape,
+  'Parte_2.mp4': mobile2Landscape,
+  'Parte_3.mp4': mobile3Landscape,
+  'Parte_4.mp4': mobile4Landscape,
+  'Parte_5.mp4': mobile5Landscape,
 };
 
 export const photoUrls: Readonly<Record<string, string>> = {

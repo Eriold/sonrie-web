@@ -171,3 +171,9 @@
 - Se priorizó F9-00 por los reportes de iPhone sin animación fluida y de navegación excesivamente larga en escritorio.
 - La inspección confirmó cinco MP4 AV1 a 1080p con fotogramas clave escasos y un recorrido de 27,5 alturas de pantalla. Falta validar en Safari de un iPhone real antes de elegir e implementar la solución.
 - Solo se actualizó documentación; no se cambiaron videos ni comportamiento de la página.
+
+## 2026-10-23 — Variante móvil de video y scroll
+
+- Se añadieron derivados H.264 verticales de 480×1040 y horizontales de 1280×720, sin audio y con keyframes cada 0,5 s; los originales AV1 de escritorio no cambiaron.
+- En móvil, el scroll asignado a video bajó de 4 a 2,5 alturas por tramo; la duración de lectura de las cinco paradas sigue en 1,5 alturas.
+- El navegador elige el video según tamaño/tacto y orientación y actualiza la fuente al girar. Chrome local comprobó avance y regreso de los cinco tramos, giro y ausencia de solicitudes AV1 en vertical. Falta prueba en los teléfonos físicos reportados.

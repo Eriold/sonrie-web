@@ -26,3 +26,10 @@ export const tourSegments: readonly TourSegment[] = [
   { id: 'parte-4', clipAsset: 'Parte_4.mp4', durationSeconds: 5.875, videoUnits: 4, stopUnits: 1.5, stopId: 'parada-5', stopPlacement: 'after', stopMediaMode: 'high-res-image', stopPhotoAsset: 'Parte_5.webp' },
   { id: 'parte-5', clipAsset: 'Parte_5.mp4', durationSeconds: 7.541667, videoUnits: 4, stopUnits: 1.5, stopId: 'parada-6', stopPlacement: 'after', stopMediaMode: 'high-res-image', stopPhotoAsset: 'Parte_6.webp' },
 ];
+
+// El visitante conserva el mismo tiempo de lectura en cada parada;
+// solo el desplazamiento necesario para recorrer los videos baja en móvil.
+export const mobileTourSegments: readonly TourSegment[] = tourSegments.map((segment) => ({
+  ...segment,
+  videoUnits: 2.5,
+}));

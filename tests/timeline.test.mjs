@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { tourSegments } from '../src/data/tour.ts';
+import { mobileTourSegments, tourSegments } from '../src/data/tour.ts';
 import { createTourTimeline, resolveTourPosition } from '../src/scripts/timeline.ts';
 
 const sample = [
@@ -20,6 +20,16 @@ test('la configuración conserva cinco videos y añade la portada final', () => 
     'high-res-image', 'high-res-image', 'high-res-image', 'high-res-image', 'high-res-image',
   ]);
   assert.deepEqual(tourSegments.map((segment) => segment.stopPlacement), ['before', 'before', 'before', 'after', 'after']);
+});
+
+test('móvil acorta solo el avance de video y conserva las paradas', () => {
+  const desktop = createTourTimeline(tourSegments);
+  const mobile = createTourTimeline(mobileTourSegments);
+  assert.equal(desktop.totalUnits, 27.5);
+  assert.equal(mobile.totalUnits, 20);
+  assert.deepEqual(mobile.segments.map((segment) => segment.videoUnits), [2.5, 2.5, 2.5, 2.5, 2.5]);
+  assert.deepEqual(mobile.segments.map((segment) => segment.stopUnits), desktop.segments.map((segment) => segment.stopUnits));
+  assert.deepEqual(mobile.segments.map((segment) => segment.durationSeconds), desktop.segments.map((segment) => segment.durationSeconds));
 });
 
 test('resuelve video, parada y fronteras con el segmento correcto', () => {

@@ -17,12 +17,15 @@ pnpm dev
 pnpm check
 pnpm build
 pnpm media:inspect
+pnpm media:mobile
 pnpm test
 ```
 
 En PowerShell de este equipo, usa `pnpm.cmd` en lugar de `pnpm` para evitar el bloqueo de `pnpm.ps1` por la política de scripts. Ambos invocan pnpm. En CMD se puede usar `pnpm`.
 
 Para probar el recorrido en Chrome local, inicia `pnpm dev` y ejecuta `pnpm test:browser` en otra terminal. Esta prueba usa la instalación local de Chrome; los navegadores adicionales se revisarán en F9-01.
+
+`pnpm media:mobile` regenera los derivados H.264 en `src/media/mobile/` desde los originales de `assets/`. El sitio usa 480×1040 en móvil vertical y 1280×720 al girar; escritorio conserva sus MP4 AV1 y su distancia de scroll. Con Dev o Preview activo en el puerto 4321, `pnpm.cmd exec node tests/mobile-performance-browser.mjs` comprueba selección de archivos, cinco tramos, regreso y giro en Chrome emulado. La comprobación final requiere los teléfonos físicos.
 
 Para comprobar los medios publicados por el build estático, ejecuta `pnpm build`, inicia `pnpm preview --host 127.0.0.1 --port 4321` y en otra terminal ejecuta `pnpm test:production`. La prueba compara por SHA-256 los cinco MP4, las cinco fotos WebP y los cinco pósters servidos con sus archivos fuente; también recorre los cinco videos y comprueba el respaldo al fallar uno. En PowerShell usa `pnpm.cmd` para cada comando. Si usas otra dirección para la vista previa, configura `SONRIE_PREVIEW_URL`.
 
@@ -35,7 +38,7 @@ Las cinco paradas fotográficas reutilizan el mismo efecto de círculos luminoso
 ## Organización
 
 - `assets/`: medios originales; conservar sin sobrescribir.
-- `src/data/media.ts`: importa por URL los originales y los pósters derivados. Astro emite rutas versionadas en `dist/_astro/`; no es necesario duplicar los originales en `public/`.
+- `src/data/media.ts`: importa por URL los originales, las variantes móviles y los pósters derivados. Astro emite rutas versionadas en `dist/_astro/`; no es necesario duplicar los originales en `public/`.
 - `src/`: aplicación Astro.
 - `docs/REQUIREMENTS.md`: copia de trabajo de la especificación original `start.txt`.
 - `docs/PROGRESS.md`: tareas, estado y verificaciones.

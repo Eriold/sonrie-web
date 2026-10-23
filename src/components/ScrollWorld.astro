@@ -1,11 +1,12 @@
 ---
-import { tourSegments } from '../data/tour';
+import { mobileTourSegments, tourSegments } from '../data/tour';
 import { characterPrototypes, stopCharacters } from '../data/characters';
 import { dialogues, visibleDialogueActions } from '../data/dialogues';
-import { characterUrls, photoUrls, posterUrls, videoUrls } from '../data/media';
+import { characterUrls, mobileLandscapeVideoUrls, mobilePortraitVideoUrls, photoUrls, posterUrls, videoUrls } from '../data/media';
 import { createTourTimeline } from '../scripts/timeline';
 
 const timeline = createTourTimeline(tourSegments);
+const mobileTimeline = createTourTimeline(mobileTourSegments);
 const stopSegments = timeline.segments.flatMap((segment, segmentIndex) => segment.stopUnits > 0 ? [{ segment, segmentIndex }] : []);
 const characterLayers = stopSegments.flatMap(({ segment, segmentIndex }) => {
   const assignment = stopCharacters.find((entry) => entry.stopId === segment.stopId);
@@ -20,7 +21,7 @@ const dialogueLayers = stopSegments.flatMap(({ segment, segmentIndex }, stopInde
 const isDev = import.meta.env.DEV;
 ---
 
-<section class="world" data-world style={`height: ${100 * (timeline.totalUnits + 1)}svh`} aria-label="Recorrido visual de Sonríe">
+<section class="world" data-world style={`--desktop-world-height: ${100 * (timeline.totalUnits + 1)}svh; --mobile-world-height: ${100 * (mobileTimeline.totalUnits + 1)}svh`} aria-label="Recorrido visual de Sonríe">
   <div class="stage" data-stage>
     <div class="fallback" aria-hidden="true"></div>
     {timeline.segments.map((segment, index) => (
@@ -30,6 +31,8 @@ const isDev = import.meta.env.DEV;
         data-index={index}
         data-asset={segment.clipAsset}
         data-src={videoUrls[segment.clipAsset]}
+        data-mobile-portrait-src={mobilePortraitVideoUrls[segment.clipAsset]}
+        data-mobile-landscape-src={mobileLandscapeVideoUrls[segment.clipAsset]}
         preload="none"
         muted
         playsinline
@@ -158,7 +161,7 @@ const isDev = import.meta.env.DEV;
 </script>
 
 <style>
-  .world { position: relative; background: #173b40; }
+  .world { position: relative; height: var(--desktop-world-height); background: #173b40; }
   .stage { position: sticky; top: 0; height: 100svh; overflow: hidden; color: white; background: #173b40; }
   .fallback, .clip, .stop-image, .shade { position: absolute; inset: 0; width: 100%; height: 100%; }
   .fallback { background: radial-gradient(circle at 70% 30%, #337477, #173b40 70%); }
@@ -220,5 +223,6 @@ const isDev = import.meta.env.DEV;
   .static-dialogues h3 { margin: 0 0 .5rem; }
   .static-dialogues p { margin: .4rem 0; }
   @media (max-width: 640px) { .stops { right: .5rem; gap: .25rem; } .stops button { width: 2.25rem; height: 2.25rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
+  @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }
 </style>

@@ -119,6 +119,18 @@ Chrome de producción verificó las cinco paradas en avance y regreso, el umbral
 
 ## Pendientes audiovisuales
 
+### F9-00 — Derivados móviles (2026-10-23)
+
+`pnpm.cmd media:mobile` genera diez MP4 H.264 en `src/media/mobile/` desde los cinco originales AV1, sin editarlos. La versión vertical mide 480×1040 y recorta el centro del cuadro horizontal; la horizontal mide 1280×720 y mantiene el cuadro completo. Ambas van sin audio, con `yuv420p`, `faststart` y un keyframe cada 12 frames (0,5 segundos). `ffprobe` confirmó códec, tamaño, 81/435/160/141/181 frames por clip y separación máxima de 0,5 segundos entre keyframes en los diez archivos.
+
+| Variante | Tamaño total de los cinco clips | Uso |
+| --- | ---: | --- |
+| Original AV1 1920×1080 | 16.905.467 bytes | Escritorio, sin cambios |
+| H.264 vertical 480×1040 | 5.711.829 bytes | Móvil vertical |
+| H.264 horizontal 1280×720 | 11.728.408 bytes | Móvil horizontal |
+
+La comparación de una muestra vertical del video 2 se revisó visualmente en `dist/mobile-review/` (ignorado por Git): el recorte conserva la vista central que el sitio ya daba en móvil. Los totales son tamaños de archivos, no bytes de red medidos en teléfono. Chrome con vista móvil/tacto emulado verificó los cinco clips, retorno, cambio de orientación y ninguna solicitud de los AV1 originales en vertical. Falta probar calidad, fluidez, descarga y regreso en Safari del iPhone 14 Pro Max y en el Infinix físico antes de cerrar F9-00.
+
 - [x] Extraer y comparar primer/último fotograma de cada clip con fotos candidatas y clips vecinos; registrar espacio, dirección, encuadre y continuidad. F4-01: tabla y cinco láminas anteriores.
 - [x] Determinar si la parada final requiere foto, último fotograma congelado o póster generado. La corrección vigente del usuario usa `Parte_6.webp` después del video 5, con su último frame y póster como respaldos.
 - [x] Confirmar presencia de pistas, códec, keyframes, color y `faststart` con `ffprobe`.

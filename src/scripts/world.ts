@@ -1,12 +1,13 @@
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { resolveStopCharacter, stopCharacters } from '../data/characters';
-import { tourSegments, type StopMediaMode } from '../data/tour';
+import { mobileTourSegments, tourSegments, type StopMediaMode } from '../data/tour';
 import { createTourTimeline, resolveTourPosition } from './timeline';
 import { initParticles } from './particles';
 
-const timeline = createTourTimeline(tourSegments);
-
 export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (position: number) => void): void {
+  const mobileView = window.matchMedia('(max-width: 640px), (pointer: coarse)');
+  const portraitView = window.matchMedia('(orientation: portrait)');
+  let timeline = createTourTimeline(mobileView.matches ? mobileTourSegments : tourSegments);
   const stage = world.querySelector<HTMLElement>('[data-stage]');
   const status = world.querySelector<HTMLElement>('[data-status]');
   const counter = world.querySelector<HTMLElement>('[data-counter]');
@@ -37,6 +38,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   let currentPhase: 'video' | 'stop' = 'video';
   let currentStopId: string | null = null;
   let currentStopProgress = 0;
+  let lastProgress = 0;
   const loaded = new Set<number>();
   const failed = new Set<number>();
   const targetTimes = videos.map(() => 0);
@@ -204,13 +206,16 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   };
 
   const load = (index: number): void => {
-    if (loaded.has(index) || failed.has(index)) return;
-    loaded.add(index);
     const video = videos[index];
+    const source = mobileView.matches
+      ? (portraitView.matches ? video.dataset.mobilePortraitSrc : video.dataset.mobileLandscapeSrc) ?? ''
+      : video.dataset.src ?? '';
+    if (failed.has(index) || (loaded.has(index) && video.getAttribute('src') === source)) return;
+    loaded.add(index);
     video.muted = true;
     video.pause();
     video.preload = 'auto';
-    video.src = video.dataset.src ?? '';
+    video.src = source;
     video.load();
   };
 
@@ -233,6 +238,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   });
 
   const render = (progress: number): void => {
+    lastProgress = progress;
     const state = resolveTourPosition(timeline, progress * timeline.totalUnits);
     if (activeIndex !== state.segmentIndex) shownIndex = -1;
     activeIndex = state.segmentIndex;
@@ -305,6 +311,21 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     onUpdate: (self) => render(self.progress),
     onRefresh: (self) => render(self.progress),
   });
+  const refreshMedia = (): void => {
+    const progress = lastProgress;
+    timeline = createTourTimeline(mobileView.matches ? mobileTourSegments : tourSegments);
+    shownIndex = -1;
+    failed.clear();
+    const poster = posters.find((image) => image.dataset.index === String(activeIndex));
+    if (currentPhase === 'video' && poster && preparedImages.has(poster)) activateLayer(poster, 'poster-image');
+    ScrollTrigger.refresh();
+    const position = trigger.start + progress * (trigger.end - trigger.start);
+    if (scrollTo) scrollTo(position);
+    else window.scrollTo({ top: position, behavior: 'instant' });
+    render(progress);
+  };
+  mobileView.addEventListener('change', refreshMedia);
+  portraitView.addEventListener('change', refreshMedia);
   stopButtons.forEach((button) => {
     button.addEventListener('click', () => {
       const index = Number(button.dataset.gotoStop);
