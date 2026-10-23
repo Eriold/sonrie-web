@@ -30,7 +30,7 @@ Para repetir la auditoría de F4-03 con Preview activo, ejecuta `pnpm.cmd exec n
 
 Los diálogos de demostración están en `src/data/dialogues.ts`. Con Preview activo, `pnpm.cmd exec node tests/dialogue-browser.mjs` comprueba páginas, teclado, tacto, regreso y movimiento reducido. Cada acción externa requiere una persona real identificada y un enlace confirmado; los personajes actuales son prototipos y no muestran botones de redes ni acreditación. La consulta pública ReTHUS se documenta en `docs/DECISIONS.md`.
 
-Los efectos ambientales se configuran por parada en `src/data/particles.ts`. Con Preview activo, `pnpm.cmd exec node tests/particles-browser.mjs` verifica su aparición tras la foto, las paradas desactivadas, el orden de capas y movimiento reducido. F6-02 ampliará las medidas de rendimiento.
+Las cinco paradas fotográficas reutilizan el mismo efecto de círculos luminosos, configurado en `src/data/particles.ts`. Los círculos aparecen y se desvanecen en ciclos después del momento inicial reservado para la foto. El dibujo se pausa al salir de la parada o al ocultar la página; se desactiva con movimiento reducido o ahorro de datos y usa menos partículas en equipos modestos. Con Preview activo, `pnpm.cmd exec node tests/particles-browser.mjs` comprueba estos estados.
 
 ## Organización
 

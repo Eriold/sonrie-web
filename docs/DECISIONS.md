@@ -115,3 +115,7 @@ Por petición del usuario, se prepara el despliegue automático al subir cambios
 ## D-027 — Node LTS 24 para el workflow (2026-10-23)
 
 El build remoto estaba fijado en Node 22.22.0, por debajo del mínimo `>=22.23.4` declarado por Astro 7.4.2 y dependencias del lockfile. Se ajusta el workflow a la rama LTS 24 y el mínimo de `package.json` a 22.23.4. Con Node 24.13.1 local, pnpm 11.1.1 instaló el lockfile congelado sin cambios, Astro Check informó cero diagnósticos, pasaron las 11 pruebas y se generó el build de Pages. No se cambian versiones de librerías por este motivo; el workflow remoto con Node 24 sigue pendiente de ejecución.
+
+## D-028 — Un ciclo de círculos luminosos para todas las paradas (2026-10-23)
+
+F6-02 adopta la preferencia visual del usuario: las cinco paradas fotográficas usan la misma configuración de círculos, con paleta pálida de verde, azul, blanco y amarillo. Cada partícula nace sin brillo, aumenta su luminosidad y se desvanece antes de reciclarse. Se conserva el retraso de aparición del 35 % para apreciar primero la foto. El motor usa un solo canvas, cancela los frames fuera de la parada, fuera del viewport o cuando la pestaña está oculta, y respeta movimiento reducido y ahorro de datos. Equipos de hasta cuatro núcleos o 4 GB reducen la cantidad y la frecuencia de dibujo. Esta decisión sustituye la variedad de efectos y la parada 2 desactivada de D-025, conservada allí como historial.

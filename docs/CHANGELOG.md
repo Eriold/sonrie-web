@@ -159,3 +159,9 @@
 
 - Se alineó el workflow con Node LTS 24 y el mínimo declarado del proyecto con Astro 7.4.2 (`>=22.23.4`).
 - El lockfile y las versiones de librerías permanecen iguales; instalación, chequeo, 11 pruebas y build de Pages pasaron con Node 24.13.1 local.
+
+## 2026-10-23 — F6-02, círculos luminosos compartidos
+
+- Se reemplazaron los efectos distintos por parada por un ciclo común de círculos que nacen, brillan suavemente y desaparecen.
+- Se detiene el dibujo fuera de la parada, del viewport o con la página oculta; ahorro de datos y movimiento reducido lo desactivan.
+- En equipos modestos se limita a seis partículas y 20 FPS. Se verificaron pruebas unitarias, Astro Check, build, Chrome y capturas visuales.

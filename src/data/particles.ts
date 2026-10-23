@@ -1,19 +1,26 @@
 export type ParticleConfig = Readonly<{
   enabled: boolean;
-  type: 'dust' | 'sparkle' | 'soft-glow';
+  type: 'glow-circle';
   density: number;
   speed: number;
   size: number;
+  lifetimeSeconds: number;
   colors: readonly string[];
 }>;
 
 export type ParticleScene = Readonly<{ stopId: string; config: ParticleConfig }>;
 
-// Efectos de muestra: pequeños y opcionales para conservar la fotografía como protagonista.
+// Una sola escena reciclada en cada fotografía, con luz tenue para conservar el fondo.
+export const glowCircleConfig: ParticleConfig = {
+  enabled: true,
+  type: 'glow-circle',
+  density: 11,
+  speed: 6,
+  size: 12,
+  lifetimeSeconds: 4.8,
+  colors: ['#e4f7ec', '#d6f1ee', '#f5f4df', '#e7f3fa'],
+};
+
 export const particleScenes: readonly ParticleScene[] = [
-  { stopId: 'parada-1', config: { enabled: true, type: 'dust', density: 12, speed: 9, size: 2.5, colors: ['#d9f4e9', '#ffffff'] } },
-  { stopId: 'parada-2', config: { enabled: false, type: 'dust', density: 0, speed: 0, size: 2, colors: ['#ffffff'] } },
-  { stopId: 'parada-3', config: { enabled: true, type: 'soft-glow', density: 7, speed: 5, size: 18, colors: ['#e7f8f0', '#b9ece8'] } },
-  { stopId: 'parada-5', config: { enabled: true, type: 'sparkle', density: 8, speed: 8, size: 3, colors: ['#f8f6de', '#d9f4e9'] } },
-  { stopId: 'parada-6', config: { enabled: true, type: 'dust', density: 10, speed: 7, size: 2.5, colors: ['#d5edf5', '#ffffff'] } },
-];
+  'parada-1', 'parada-2', 'parada-3', 'parada-5', 'parada-6',
+].map((stopId) => ({ stopId, config: glowCircleConfig }));

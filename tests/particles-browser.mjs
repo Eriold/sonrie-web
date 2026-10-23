@@ -23,39 +23,71 @@ try {
   };
 
   await goTo(0.2, '');
-  await goTo(0.8, 'parada-1', 'dust');
+  await goTo(0.8, 'parada-1', 'glow-circle');
   await page.waitForFunction(() => {
     const canvas = document.querySelector('[data-particles]');
     if (!canvas?.width || !canvas.height) return false;
     const pixels = canvas.getContext('2d')?.getImageData(0, 0, canvas.width, canvas.height).data;
     return pixels && pixels.some((value, index) => index % 4 === 3 && value > 0);
   });
-  assert.equal(await canvas.getAttribute('data-particle-count'), '12');
+  assert.equal(await canvas.getAttribute('data-particle-count'), '11');
+  assert.equal(await canvas.getAttribute('data-running'), 'true');
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { configurable: true, value: true });
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  assert.equal(await canvas.getAttribute('data-running'), 'false');
+  await page.evaluate(() => {
+    delete document.hidden;
+    document.dispatchEvent(new Event('visibilitychange'));
+  });
+  await page.waitForFunction(() => document.querySelector('[data-particles]')?.dataset.running === 'true');
   if (process.env.SONRIE_CAPTURE === '1') {
     await page.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.dialogueVisible === 'true');
     await page.waitForTimeout(300);
     await page.screenshot({ path: 'dist/f6-dust-desktop.png' });
   }
-  await goTo(6.3, '');
-  await goTo(11.8, 'parada-3', 'soft-glow');
+  await goTo(6.3, 'parada-2', 'glow-circle');
+  await goTo(11.8, 'parada-3', 'glow-circle');
   if (process.env.SONRIE_CAPTURE === '1') {
     await page.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.dialogueVisible === 'true' && document.querySelector('[data-stage]')?.dataset.stopId === 'parada-3');
     await page.waitForTimeout(300);
     await page.screenshot({ path: 'dist/f6-glow-desktop.png' });
   }
-  await goTo(21.3, 'parada-5', 'sparkle');
-  await goTo(26.8, 'parada-6', 'dust');
+  await goTo(21.3, 'parada-5', 'glow-circle');
+  await goTo(26.8, 'parada-6', 'glow-circle');
   await goTo(24, '');
+  assert.equal(await canvas.getAttribute('data-running'), 'false');
   await page.getByRole('button', { name: 'Ir a la parada 1' }).click();
   await page.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.stopId === 'parada-1');
   assert.equal(await canvas.getAttribute('data-active-stop'), '');
   assert.deepEqual(errors, []);
 
+  const economical = await browser.newPage();
+  await economical.addInitScript(() => {
+    Object.defineProperty(navigator, 'hardwareConcurrency', { value: 2, configurable: true });
+  });
+  await economical.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+  await economical.evaluate(() => window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 0.8 * innerHeight));
+  await economical.waitForFunction(() => document.querySelector('[data-particles]')?.dataset.activeStop === 'parada-1');
+  assert.equal(await economical.locator('[data-particles]').getAttribute('data-quality'), 'reduced');
+  assert.equal(await economical.locator('[data-particles]').getAttribute('data-particle-count'), '6');
+  await economical.close();
+
+  const saving = await browser.newPage();
+  await saving.addInitScript(() => {
+    Object.defineProperty(navigator, 'connection', { value: { saveData: true }, configurable: true });
+  });
+  await saving.goto(baseUrl, { waitUntil: 'domcontentloaded' });
+  await saving.waitForFunction(() => document.querySelector('[data-world]')?.dataset.motion === 'off');
+  assert.equal(await saving.locator('[data-particles]').getAttribute('data-running'), null);
+  await saving.close();
+
   const reduced = await browser.newPage({ reducedMotion: 'reduce' });
   await reduced.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await reduced.waitForFunction(() => document.querySelector('[data-world]')?.dataset.motion === 'off');
   assert.equal(await reduced.locator('[data-particles]').evaluate((element) => getComputedStyle(element).display), 'none');
-  console.log(JSON.stringify({ enabled: ['parada-1', 'parada-3', 'parada-5', 'parada-6'], disabled: 'parada-2', photoFirst: 'ok', pointerEvents: 'none', reducedMotion: 'off', errors }));
+  console.log(JSON.stringify({ enabled: ['parada-1', 'parada-2', 'parada-3', 'parada-5', 'parada-6'], type: 'glow-circle', photoFirst: 'ok', pointerEvents: 'none', reducedMotion: 'off', saveData: 'off', lowPowerCount: 6, errors }));
 } finally {
   await browser.close();
 }
