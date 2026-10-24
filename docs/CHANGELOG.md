@@ -227,3 +227,8 @@
 
 - Se acortó la línea horizontal de posición a 32 px en escritorio y 24 px en móvil, con extremos redondeados y brillo blanco tenue.
 - El riel, su avance verde menta y la navegación permanecen sincronizados con el scroll.
+
+## 2026-10-23 — Cierre de la barra de navegación
+
+- El usuario aprobó el diseño final del indicador y los puntos; F2-04 se marca `COMPLETED` tras pruebas locales y en la versión pública.
+- La fluidez del recorrido en iPhone e Infinix sigue en revisión bajo F9-00; la siguiente implementación es F7-01.
