@@ -232,3 +232,9 @@
 
 - El usuario aprobó el diseño final del indicador y los puntos; F2-04 se marca `COMPLETED` tras pruebas locales y en la versión pública.
 - La fluidez del recorrido en iPhone e Infinix sigue en revisión bajo F9-00; la siguiente implementación es F7-01.
+
+## 2026-10-23 — Encabezado al terminar el recorrido
+
+- La barra «Sonríe Urrao / Ir al contenido» se movió después de la experiencia audiovisual y se fija arriba cuando el scroll llega a ella.
+- El destino del enlace conserva el foco y queda visible bajo la barra fija; el título principal permanece accesible antes del recorrido.
+- Se verificó la transición en Chrome de escritorio y móvil y se habilitó elegir la URL de desarrollo para la prueba general de navegador.

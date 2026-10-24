@@ -153,3 +153,7 @@ El usuario precisó que la línea y los puntos no requieren negro. Se eliminan l
 ## D-036 — Indicador de posición más corto (2026-10-23)
 
 El usuario pidió que la línea horizontal que señala la posición fuese más pequeña y cuidada visualmente. Se reduce de 44 a 32 px en escritorio y de aproximadamente 34 a 24 px en móvil, con extremos redondeados y un brillo blanco leve. Conserva el color blanco y su posición exacta en `--tour-progress`; no cambia el área interactiva del riel ni el progreso verde menta.
+
+## D-037 — Encabezado posterior y fijo (2026-10-23)
+
+La marca y el enlace «Ir al contenido» se muestran después de todo el recorrido audiovisual, no al abrir la página. El encabezado es un hermano posterior de `ScrollWorld` y usa `position: sticky; top: 0`, por lo que entra naturalmente desde abajo al terminar el stage y queda arriba durante las secciones posteriores, sin escuchar eventos de scroll ni añadir animación. El fondo blanco cubre todo el ancho para mantener legible el texto. La sección provisional siguiente tiene al menos una altura de viewport para permitir que el encabezado alcance el borde superior; `scroll-margin` evita que el salto oculte su título. El `h1` accesible permanece antes del recorrido y la marca visible se presenta como texto para conservar un orden de encabezados útil.

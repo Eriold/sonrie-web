@@ -13,12 +13,15 @@ import ScrollWorld from '../components/ScrollWorld.astro';
   </head>
   <body class="min-h-screen bg-white text-slate-900">
     <main>
-      <header class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-        <h1 class="text-2xl font-semibold">Sonríe Urrao</h1>
-        <a class="underline underline-offset-4" href="#despues-del-recorrido">Ir al contenido</a>
-      </header>
+      <h1 class="sr-only">Sonríe Urrao</h1>
       <ScrollWorld />
-      <section id="despues-del-recorrido" class="mx-auto max-w-3xl px-6 py-20" tabindex="-1">
+      <header class="sticky top-0 z-10 bg-white">
+        <div class="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+          <p class="text-2xl font-semibold">Sonríe Urrao</p>
+          <a class="underline underline-offset-4" href="#despues-del-recorrido">Ir al contenido</a>
+        </div>
+      </header>
+      <section id="despues-del-recorrido" class="mx-auto min-h-svh max-w-3xl scroll-mt-20 px-6 py-20" tabindex="-1">
         <h2 class="text-3xl font-semibold">Información en preparación</h2>
         <p class="mt-4">Estamos verificando los datos y el contenido de este sitio.</p>
       </section>

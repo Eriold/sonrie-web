@@ -1,12 +1,13 @@
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright-core';
 
+const baseUrl = process.env.SONRIE_PREVIEW_URL ?? 'http://127.0.0.1:4321/';
 const browser = await chromium.launch({ channel: 'chrome', headless: true });
 try {
   const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, reducedMotion: 'no-preference' });
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.message));
-  await page.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await page.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await page.locator('video[data-clip]').first().waitFor({ state: 'attached' });
   assert.equal(await page.locator('video[data-clip]').count(), 5);
   assert.equal(await page.locator('[data-goto-stop]').count(), 5);
@@ -117,13 +118,13 @@ try {
   assert.deepEqual(errors, []);
 
   const reduced = await browser.newPage({ reducedMotion: 'reduce' });
-  await reduced.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await reduced.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await reduced.waitForFunction(() => document.querySelector('[data-world]')?.dataset.motion === 'off');
   assert.equal(await reduced.locator('[data-world] video.is-active').count(), 0);
   assert.equal(await reduced.locator('[data-goto-stop]:visible').count(), 0);
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 }, reducedMotion: 'no-preference' });
-  await mobile.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await mobile.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await mobile.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.visual === 'high-res-image');
   const mobilePhoto = await mobile.locator('[data-photo].is-active').evaluate((photo) => ({
     width: photo.getBoundingClientRect().width,
@@ -139,7 +140,7 @@ try {
     await fourthReleased;
     await route.continue();
   });
-  await delayed.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await delayed.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await delayed.evaluate(() => window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 15 * innerHeight));
   await delayed.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.visual === 'video' && document.querySelector('[data-clip][data-index="2"]')?.classList.contains('is-active'), { timeout: 30000 });
   await delayed.evaluate(() => window.scrollTo(0, document.querySelector('[data-world]').offsetTop + 18.5 * innerHeight));
@@ -159,7 +160,7 @@ try {
 
   const brokenPhoto = await browser.newPage({ viewport: { width: 1280, height: 720 } });
   await brokenPhoto.route((url) => url.pathname.includes('Parte_6.') && url.pathname.endsWith('.webp'), (route) => route.abort());
-  await brokenPhoto.goto('http://127.0.0.1:4321/', { waitUntil: 'domcontentloaded' });
+  await brokenPhoto.goto(baseUrl, { waitUntil: 'domcontentloaded' });
   await brokenPhoto.getByRole('button', { name: 'Ir a la parada 5' }).click();
   await brokenPhoto.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.segmentIndex === '4' && document.querySelector('[data-stage]')?.dataset.phase === 'stop');
   await brokenPhoto.waitForFunction(() => document.querySelector('[data-stage]')?.dataset.visual === 'poster-image', { timeout: 30000 });
