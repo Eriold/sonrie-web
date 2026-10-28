@@ -159,6 +159,12 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
       activateLayer(videos[activeIndex], 'video');
       return;
     }
+    // Keep a decoded poster visible while the active video loads or after it fails.
+    const videoFallback = posters.find((image) => image.dataset.index === String(activeIndex));
+    if (currentPhase === 'video' && videoFallback && preparedImages.has(videoFallback)) {
+      activateLayer(videoFallback, 'poster-image');
+      return;
+    }
     if (currentPhase === 'stop') {
       const poster = posters.find((image) => image.dataset.index === String(activeIndex));
       if (poster && preparedImages.has(poster)) {

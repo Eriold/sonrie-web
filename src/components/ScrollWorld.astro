@@ -40,16 +40,17 @@ const isDev = import.meta.env.DEV;
         tabindex="-1"
       />
     ))}
-    {timeline.segments.map((segment, index) => segment.stopPhotoAsset && (
+    {timeline.segments.map((segment, index) => (
       <img
-        class="stop-image"
+        class:list={["stop-image", index === 0 && "is-active"]}
         data-poster
         data-index={index}
         data-asset={segment.clipAsset}
         src={posterUrls[segment.clipAsset]}
         alt=""
         aria-hidden="true"
-        loading="lazy"
+        loading={index === 0 ? "eager" : "lazy"}
+        fetchpriority={index === 0 ? "high" : "auto"}
         decoding="async"
       />
     ))}

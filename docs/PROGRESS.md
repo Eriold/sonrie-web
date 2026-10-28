@@ -8,59 +8,36 @@ La [especificación completa](REQUIREMENTS.md) rige cada tarea. Los IDs permiten
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F1-01 | COMPLETED | Revisar estado real del workspace: registrar archivos, Git y herramientas. | `docs/DECISIONS.md` | — | Solo `start.txt` y `assets/` al inicio; sin Git ni aplicación; Node 24.13.1 disponible. |
-| F1-02 | COMPLETED | Consultar referencia Arko y señalar diferencias de arquitectura. | `docs/DECISIONS.md` | — | Se revisaron README, prompts, stack, motor, movimiento, componentes y datos; falta confirmar licencia antes de reutilizar código. |
-| F1-03 | COMPLETED | Crear proyecto Astro 7 estático con TypeScript, Tailwind 4, GSAP, Lenis, Sharp, Phosphor y sitemap; fijar pnpm y lockfile. `pnpm.cmd build` debe terminar sin errores. | `package.json`, `pnpm-lock.yaml`, `astro.config.mjs`, `tsconfig.json`, `src/` | F1-01 | Astro 7.4.2, pnpm 11.1.1; build estático correcto, `astro check` sin diagnósticos e instalación offline con lockfile congelado correcta. Sitemap condicionado a dominio confirmado. |
-| F1-04 | COMPLETED | Crear memoria completa y checklist; `REQUIREMENTS.md` debe conservar íntegro `start.txt`. | `AGENTS.md`, `docs/*.md` | F1-01 | Archivos creados; SHA-256 de `start.txt` y `docs/REQUIREMENTS.md` idénticos en la revisión de F1-06. |
-| F1-05 | COMPLETED | Registrar todos los archivos reales con tamaño y dimensiones/duración básica; señalar medios ausentes. | `docs/MEDIA.md` | F1-01 | 5 videos, 9 fotos y 4 personajes registrados con Pillow/OpenCV. |
-| F1-06 | COMPLETED | Inspeccionar licencia de referencia y completar metadatos técnicos con herramienta de video. | `docs/DECISIONS.md`, `docs/MEDIA.md` | F1-02, F1-05 | Arko sin licencia escrita identificada; el usuario informó permiso verbal de Midudev para usar la implementación. `pnpm.cmd media:inspect` confirmó AV1, 4 pistas AAC, keyframes escasos, BT.709 y `faststart`; seek real pendiente de F4-03. |
-| F1-07 | COMPLETED | Preparar estructura local para GitHub sin alterar originales; comprobar exclusiones y tamaños. | `README.md`, `.gitignore`, `.gitattributes`, `docs/` | F1-03, F1-05 | Los 18 medios suman 37.565.174 bytes; originales intactos; generados y cachés ignorados. Sin remoto, commits ni push. |
 
 ## Fase 2 — Motor de recorrido
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F2-01 | COMPLETED | Definir `tour.ts` tipado y función pura que traduzca scroll a segmento, fase, progreso de video y parada; cubrir límites y retroceso. | `src/data/tour.ts`, `src/scripts/timeline.ts`, pruebas | F1-03 | Cinco segmentos configurables; 4 pruebas cubren fases, fronteras, límites, saltos, retroceso y configuración inválida. `pnpm.cmd check` y `pnpm.cmd build` correctos. |
-| F2-02 | COMPLETED | Crear stage sticky, ScrollTrigger y Lenis sincronizados; cinco clips responden al scroll en ambos sentidos y se detienen con él. | `src/components/ScrollWorld.astro`, `src/scripts/world.ts`, `src/scripts/motion.ts` | F2-01 | Chrome local: los 5 MP4 respondieron al scroll, permanecieron pausados y el primer clip volvió al mismo tiempo tras retroceder. Modo de movimiento reducido y enlace de salida verificados. `pnpm.cmd check` y build correctos. |
-| F2-03 | COMPLETED | Soportar saltos a paradas, scroll rápido, regreso y panel de depuración solo en desarrollo. | componentes/scripts del recorrido | F2-02 | Cinco botones permiten saltar a las paradas. Chrome verificó salto a la 5, regreso a la 2, scroll rápido hasta la 1 y retroceso al mismo tiempo de video. Panel presente en desarrollo y ausente del HTML de producción. |
-| F2-04 | COMPLETED | Barra vertical continua con cinco marcas, indicador de posición, arrastre/tacto y teclado. | `ScrollWorld.astro`, `world.ts`, prueba de navegador | F2-03 | Cinco puntos blancos/menta sin numeración visible, relleno reversible y marcador compacto. Chrome local y versión publicada comprobaron clic, tacto, arrastre desde puntos y riel, teclado y movimiento reducido. El usuario aprobó el diseño final. |
 
 ## Fase 3 — Paradas y transiciones
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F3-01 | COMPLETED | Intercalar intervalos configurables y reversibles en el orden corregido por el usuario: foto antes de los videos que la tienen. | `src/data/tour.ts`, `src/scripts/timeline.ts`, componentes | F2-02 | Cinco videos consecutivos; cuatro intervalos introductorios preceden los videos 1, 2, 3 y 5. El cuarto video no tiene parada fotográfica. El motor admite paradas posteriores cuando se configuren. |
-| F3-02 | COMPLETED | Implementar `video-freeze`, `poster-image` y `high-res-image` por portada, con selector comparativo en desarrollo. | componentes de fondo, datos | F3-01 | Fotos `Parte_1.webp`, `Parte_2.webp`, `Parte_3.webp`, `Parte_5.webp` antes de videos 1, 2, 3 y 5; pósters del primer frame y video inicial congelado como alternativas. Chrome comprobó orden, regreso y adaptación móvil. |
-| F3-03 | COMPLETED | Precargar antes de cambiar capas y mantener fallback visual ante fallos; comprobar ausencia de flashes en ida y vuelta. | componentes/scripts de fondo | F3-02 | Fotos y pósters preparados con `decode()`; videos vecinos precargados. Chrome verificó video 3→4 con descarga retrasada, regreso sin fondo vacío y foto 5 fallida con póster de respaldo. |
 
 ## Fase 4 — Integración audiovisual
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F4-01 | COMPLETED | Comparar frames y fotos, asignar espacios y continuidad; documentar discrepancias sin inventar relación. | `docs/MEDIA.md`, `src/data/tour.ts` | F1-05 | Cinco láminas con inicio, puntos intermedios, final y foto; se añadió comparación de `Parte_6.webp` con el final del video 5. Sin asignar consultorios numerados ni fachada. |
-| F4-02 | COMPLETED | Incorporar medios preservando originales; verificar los cinco clips activos. | URLs versionadas de Astro, `docs/MEDIA.md`, prueba de producción | F3-02, F4-01 | Build estático publica 5 MP4, 5 fotos y 5 pósters con HTTP 200, MIME correcto y SHA-256 idéntico a sus fuentes. Chrome recorrió los 5 videos y verificó el respaldo ante fallo del cuarto. |
-| F4-03 | COMPLETED | Medir seek, GOP, memoria y red; optimizar sin recodificación innecesaria. | cargador de videos, `docs/MEDIA.md` | F4-02 | Chrome 156: descarga inicial de MP4 reducida de 9–11 MB a 3,0 MB; seek local y red simulada documentados. Los cuatro AAC son silenciosos. Riesgo de entrada lenta con 4 Mb/s pendiente de pruebas de F9-01. |
 
 ## Fase 5 — Personajes y diálogos
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F5-01 | COMPLETED | Inspeccionar personajes y asignar roles ilustrativos; datos editables sin identidad profesional inventada. | `src/data/characters.ts`, `docs/MEDIA.md` | F4-01 | Cuatro PNG abiertos y alfa comprobado; cinco paradas vinculadas a guías ilustrativas provisionales. Umbral de aparición del 35 % configurado y probado como función pura; renderizado pendiente de F5-02. |
-| F5-02 | COMPLETED | Renderizar personaje responsive con alfa, entrada/salida y reemplazo por configuración. | componente de personaje | F5-01, F3-01 | Cuatro PNG originales publicados; cinco capas activadas por configuración tras el 35 % de la parada. Chrome verificó avance, regreso, móvil, movimiento reducido y respaldo fotográfico ante fallo. |
-| F5-03 | COMPLETED | Implementar diálogo paginado y controles de mouse, tacto y teclado; scroll no debe quitar contenido inesperadamente. | `src/data/dialogues.ts`, componente de diálogo | F5-02 | Cinco diálogos de dos páginas; navegación explícita, regreso con estado conservado, vista móvil y textos sin animación verificados. Enlaces externos opcionales filtrados; cero enlaces publicados para prototipos. |
 
 ## Fase 6 — Partículas
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F6-01 | COMPLETED | Añadir partículas opcionales por parada con configuración tipada y `pointer-events: none`. | `src/scripts/particles.ts`, componente | F3-01 | Canvas 2D bajo personaje y diálogo; cuatro paradas activas y una apagada. Chrome verificó foto inicial limpia, dibujo activo, controles no bloqueados y movimiento reducido. |
-| F6-02 | COMPLETED | Detener escenas inactivas y reducir/desactivar movimiento según preferencias y rendimiento. | script/componente de partículas | F6-01 | Cinco paradas reutilizan círculos luminosos cíclicos. Chrome comprobó pausa al salir y al ocultar la página, movimiento reducido, ahorro de datos, seis partículas en equipo modesto, 0 errores y capturas visuales. |
 
 ## Fase 7 — Diseño comercial
 
 | ID | Estado | Tarea y criterio de aceptación | Archivos previstos | Depende de | Resultado |
 | --- | --- | --- | --- | --- | --- |
-| F7-00 | COMPLETED | Situar la barra de marca después del recorrido y fijarla al llegar arriba; mantener el salto al contenido y el acceso por teclado. | `src/pages/index.astro`, prueba de navegador | F2-04 | Chrome local en escritorio y móvil verificó barra fuera de la vista inicial, entrada desde abajo, posición fija arriba, enlace de salto y movimiento reducido. `pnpm.cmd check`, build, `test:browser` y `test:navigation` pasaron. |
 | F7-01 | PENDING | Diseñar portada y secciones semánticas: negocio, servicios confirmados, instalaciones, ubicación, contacto y FAQ. | `src/pages/index.astro`, componentes, estilos | F1-03 | Pendiente; datos comerciales por validar. |
 | F7-02 | PENDING | Configurar CTA WhatsApp y navegación alternativa usable sin videos. No mostrar número inventado. | `src/data/contact.ts`, componentes | F7-01 | Pendiente; requiere número oficial para enlace real. |
 | F7-03 | PENDING | Validar diseño móvil, capas, foco y contraste con imágenes reales. | componentes/estilos | F3-03, F5-03, F7-01 | Pendiente. |
@@ -190,3 +167,18 @@ La secuencia vigente es foto 1→video 1→foto 2→video 2→foto 3→video 3�
 **F7-00, barra de marca después del recorrido (2026-10-23):** por solicitud del usuario, el encabezado visible «Sonríe Urrao / Ir al contenido» se movió después de `ScrollWorld`. Ahora entra desde el borde inferior y usa `position: sticky` al alcanzar el borde superior. La sección posterior ocupa al menos una altura de pantalla para que la fijación ocurra aun con el contenido provisional corto; `scroll-margin` deja visible el destino del enlace bajo el encabezado. Un `h1` solo para lectores de pantalla queda antes del recorrido, de modo que los encabezados mantengan orden semántico. Chrome verificó geometría, enlace y movimiento reducido en 1280×720 y 390×844; se revisaron capturas de la entrada y posición fija. `pnpm.cmd check` terminó con 0 diagnósticos, `pnpm.cmd build` generó una página, `pnpm.cmd test:browser` pasó secuencia, regreso, medios, móvil y movimiento reducido sin errores de página, y `pnpm.cmd test:navigation` pasó. La primera ejecución de `test:browser` apuntó al servidor Preview y falló porque ese test exige el panel de depuración de Dev; se añadió `SONRIE_PREVIEW_URL` al test y pasó contra Dev.
 
 **Verificación adicional de F7-00:** `pnpm.cmd test:production` pasó contra Astro Preview: cinco videos activos, 19 medios publicados con hashes correctos, foto final y respaldo ante fallo de video, sin errores de página.
+
+**2026-10-27 — Pantalla verde: NEEDS_REVIEW.** Revisión estática y propuesta en [PROPUESTA-PANTALLA-VERDE.md](PROPUESTA-PANTALLA-VERDE.md). Identificadas dependencias del arranque JavaScript y cobertura incompleta del póster durante video. Incidente original no reproducido; causa pendiente de evidencia del navegador afectado. Implementación pendiente de decisión del usuario. No se ejecutaron pruebas funcionales ni se modificó el sitio en esta revisión.
+
+**2026-10-27 — Tutorial de scroll: NEEDS_REVIEW.** Propuesta de mano animada, botón «Saltar», variantes PC/móvil y máximo de tres presentaciones por navegador mediante localStorage en [PROPUESTA-TUTORIAL-SCROLL.md](PROPUESTA-TUTORIAL-SCROLL.md). Se especifican tolerancia a almacenamiento bloqueado, movimiento reducido y límites de frecuencia. No se modificó el comportamiento; pendiente aprobación del usuario.
+
+**2026-10-27 — Propuesta de modo ligero: NEEDS_REVIEW.** Añadida a PROPUESTA-TUTORIAL-SCROLL.md la secuencia de fotos con avatar progresivo y navegación «Siguiente», además de detección prudente y opción manual. El modo estático actual oculta fotos/avatares y solo detecta saveData; la conexión lenta no se detecta de forma uniforme. No se implementó el cambio.
+
+## Propuestas en revisi?n
+
+- Pantalla verde: causa a?n no reproducida; revisar [propuesta](PROPUESTA-PANTALLA-VERDE.md).
+- Tutorial de scroll y modo ligero: localStorage hasta tres presentaciones, ayuda PC/m?vil y secuencia de fotos con avatares para conexi?n limitada; revisar [propuesta](PROPUESTA-TUTORIAL-SCROLL.md).
+
+**Regla de prioridad (2026-10-27):** los issues que reporte el usuario van antes que la siguiente tarea planificada. Propuestas en NEEDS_REVIEW requieren aprobación antes de implementarse.
+
+**2026-10-28 — Respaldo ante carga lenta: IN_PROGRESS.** Cada tramo tiene póster, el primero visible desde el HTML con prioridad alta; world.ts muestra el póster decodificado mientras carga el video o si falla. pnpm check 0 diagnósticos, pnpm test 12/12, pnpm build correcto. Pendiente publicación y revisión en el navegador afectado; no se confirma aún la causa original.
