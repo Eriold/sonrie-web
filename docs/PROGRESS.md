@@ -182,3 +182,5 @@ La secuencia vigente es foto 1→video 1→foto 2→video 2→foto 3→video 3�
 **Regla de prioridad (2026-10-27):** los issues que reporte el usuario van antes que la siguiente tarea planificada. Propuestas en NEEDS_REVIEW requieren aprobación antes de implementarse.
 
 **2026-10-28 — Respaldo ante carga lenta: IN_PROGRESS.** Cada tramo tiene póster, el primero visible desde el HTML con prioridad alta; world.ts muestra el póster decodificado mientras carga el video o si falla. pnpm check 0 diagnósticos, pnpm test 12/12, pnpm build correcto. Pendiente publicación y revisión en el navegador afectado; no se confirma aún la causa original.
+
+**2026-10-28 — Ahorro de datos con scroll: IN_PROGRESS.** saveData ya no desactiva el recorrido: Lenis/ScrollTrigger siguen activos y se muestran pósteres por segmento sin solicitar MP4. Movimiento reducido conserva modo estático. pnpm check 0 diagnósticos, pnpm test 12/12, pnpm build correcto. Publicación pendiente.

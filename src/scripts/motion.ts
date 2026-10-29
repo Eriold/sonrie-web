@@ -11,7 +11,7 @@ export function initMotion(): void {
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData ?? false;
-  if (reduced || saveData) {
+  if (reduced) {
     initWorld(world, true);
     return;
   }
@@ -23,5 +23,5 @@ export function initMotion(): void {
   initWorld(world, false, (position) => {
     lenis.scrollTo(position, { immediate: true });
     ScrollTrigger.update();
-  });
+  }, saveData);
 }

@@ -4,7 +4,7 @@ import { mobileTourSegments, tourSegments, type StopMediaMode } from '../data/to
 import { createTourTimeline, resolveTourPosition } from './timeline';
 import { initParticles } from './particles';
 
-export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (position: number) => void): void {
+export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (position: number) => void, posterOnly = false): void {
   const mobileView = window.matchMedia('(max-width: 640px), (pointer: coarse)');
   const portraitView = window.matchMedia('(orientation: portrait)');
   let timeline = createTourTimeline(mobileView.matches ? mobileTourSegments : tourSegments);
@@ -147,6 +147,12 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   };
 
   const updateVisual = (): void => {
+    if (posterOnly) {
+      const poster = posters.find((image) => image.dataset.index === String(activeIndex));
+      if (poster && preparedImages.has(poster)) activateLayer(poster, 'poster-image');
+      else if (!visibleLayer) stage.dataset.visual = 'fallback';
+      return;
+    }
     const mode = currentPhase === 'stop' ? selectedModes[activeIndex] : 'video-freeze';
     const preferred = mode === 'poster-image' ? posters.find((poster) => poster.dataset.index === String(activeIndex))
       : mode === 'high-res-image' ? photos.find((photo) => photo.dataset.index === String(activeIndex))
@@ -213,6 +219,7 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
   };
 
   const load = (index: number): void => {
+    if (posterOnly) return;
     const video = videos[index];
     const source = mobileView.matches
       ? (portraitView.matches ? video.dataset.mobilePortraitSrc : video.dataset.mobileLandscapeSrc) ?? ''
@@ -261,15 +268,15 @@ export function initWorld(world: HTMLElement, staticMode: boolean, scrollTo?: (p
     load(activeIndex);
     if (activeIndex > 0 && state.videoProgress < 0.5) load(activeIndex - 1);
     if (activeIndex + 1 < videos.length && state.videoProgress > 0.5) load(activeIndex + 1);
-    for (const index of [activeIndex - 1, activeIndex, activeIndex + 1]) {
+    for (const index of (posterOnly ? [activeIndex] : [activeIndex - 1, activeIndex, activeIndex + 1])) {
       if (index < 0 || index >= videos.length) continue;
-      prepareImage(photos.find((image) => image.dataset.index === String(index)));
+      if (!posterOnly) prepareImage(photos.find((image) => image.dataset.index === String(index)));
       prepareImage(posters.find((image) => image.dataset.index === String(index)));
     }
     const characterAssignment = stopCharacters.find((entry) => entry.stopId === state.activeStopId);
     particles?.setStop(state.phase === 'stop' && characterAssignment
       && state.stopProgress >= characterAssignment.revealAfterProgress ? state.activeStopId : null);
-    if (state.phase === 'stop' && characterAssignment && state.stopProgress >= characterAssignment.revealAfterProgress / 2) {
+    if (!posterOnly && state.phase === 'stop' && characterAssignment && state.stopProgress >= characterAssignment.revealAfterProgress / 2) {
       prepareCharacter(state.activeStopId);
     }
     seek(activeIndex);
