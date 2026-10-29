@@ -125,6 +125,12 @@ const isDev = import.meta.env.DEV;
       <p data-status role="status" aria-live="polite">Cargando el primer tramo…</p>
       <a href="#despues-del-recorrido">Saltar el recorrido</a>
     </div>
+    <aside class="scroll-tutorial" data-scroll-tutorial hidden aria-label="Cómo recorrer la página">
+      <span class="tutorial-gesture tutorial-touch" aria-hidden="true">☝️</span>
+      <span class="tutorial-gesture tutorial-desktop" aria-hidden="true">↕</span>
+      <p>Desliza para recorrer Sonríe</p>
+      <a href="#despues-del-recorrido" data-tutorial-skip>Saltar</a>
+    </aside>
     <nav class="stops" aria-label="Navegar por el recorrido">
       <div class="timeline-rail" data-timeline-rail>
         <div class="timeline-slider" data-timeline-slider role="slider" tabindex="0" aria-label="Posición del recorrido" aria-orientation="vertical" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" aria-valuetext="Inicio del recorrido">
@@ -206,6 +212,14 @@ const isDev = import.meta.env.DEV;
   .dialogue-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1rem; }
   .static-dialogues { display: none; }
   .copy { position: absolute; z-index: 2; left: clamp(1.5rem, 6vw, 6rem); bottom: clamp(2.5rem, 9vh, 6rem); max-width: 34rem; }
+  .scroll-tutorial { position: absolute; z-index: 5; left: 50%; top: 50%; display: grid; justify-items: center; gap: .45rem; width: min(19rem, calc(100% - 3rem)); padding: 1rem; border: 1px solid rgb(255 255 255 / 65%); border-radius: 1rem; background: rgb(7 30 34 / 82%); color: white; text-align: center; transform: translate(-50%, -50%); pointer-events: none; }
+  .scroll-tutorial[hidden] { display: none; }
+  .scroll-tutorial p { margin: 0; font-weight: 600; }
+  .scroll-tutorial a { pointer-events: auto; padding: .5rem 1rem; }
+  .tutorial-gesture { display: block; font-size: 2rem; line-height: 1; }
+  .tutorial-touch { animation: tutorial-swipe 1.1s ease-in-out infinite; }
+  .tutorial-desktop { display: none; font-size: 2.4rem; }
+  @keyframes tutorial-swipe { 0%, 100% { transform: translateY(7px); opacity: .65; } 50% { transform: translateY(-7px); opacity: 1; } }
   .eyebrow { text-transform: uppercase; letter-spacing: .15em; font-size: .75rem; }
   h2 { margin: .6rem 0; font-size: clamp(2.75rem, 7vw, 6rem); line-height: 1; }
   [data-status] { min-height: 1.5em; margin: 1.25rem 0; }
@@ -242,5 +256,6 @@ const isDev = import.meta.env.DEV;
   @media (max-width: 640px) { .stops { right: .5rem; width: 1.5rem; height: min(64svh, 32rem); padding-block: 1.125rem; } .stops button { top: var(--stop-mobile-position); width: 2.25rem; height: 2.25rem; } .timeline-slider { width: 2.25rem; } .timeline-indicator { width: 1.5rem; } .copy { right: 3.25rem; } .character { right: 3rem; bottom: 31svh; max-width: calc(100% - 5rem); height: 40svh; } .stage[data-dialogue-visible='true'] .character { right: 2.5rem; bottom: 0; height: 64svh; } .dialogue { left: 1rem; bottom: 1rem; width: calc(100% - 4.5rem); padding: 1rem; } .dialogue-controls { gap: .45rem; } .dialogue-controls button { padding: .4rem .6rem; } .debug { display: none; } }
   @media (max-width: 640px), (pointer: coarse) { .world { height: var(--mobile-world-height); } }
   @media (pointer: coarse) { .stops button { top: var(--stop-mobile-position); } }
-  @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } }
+  @media (pointer: fine) { .tutorial-touch { display: none; } .tutorial-desktop { display: block; } }
+  @media (prefers-reduced-motion: reduce) { .clip, .stop-image, .character { transition: none; } .tutorial-touch { animation: none; transform: none; } }
 </style>
